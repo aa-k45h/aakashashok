@@ -141,41 +141,49 @@
   </section>
 
   <section id="writing" class="stop split" aria-labelledby="h-writing">
-    <div class="sheet memo">
-      <button type="button" class="prop clip" aria-label="Paperclip" aria-pressed="false">
-        <svg viewBox="0 0 40 90" width="40" height="90" aria-hidden="true" focusable="false">
-          <path d="M12 26v40a9 9 0 0 0 18 0V18a13 13 0 0 0-26 0v50" fill="none" stroke="#6f8f99" stroke-width="3.5" stroke-linecap="round"/>
+    <div class="sheet-wrap">
+      <!-- A cat under the sheet. Its paw slides out, plucks the floating flower and takes it back. -->
+      <div class="reach" aria-hidden="true">
+        <svg class="paw" viewBox="0 0 70 150" focusable="false">
+          <path d="M19 0h32v104q9 5 9 20 0 23-25 23T10 124q0-15 9-20Z" fill="#f7a23b" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M20 22q15 7 30 0M20 44q15 7 30 0M20 66q15 7 30 0M20 88q15 7 30 0" fill="none" stroke="#d9801f" stroke-width="4.500" stroke-linecap="round"/>
+          <path d="M13 118q-2 22 22 26 24-4 22-26Q35 104 13 118Z" fill="#fff6e2"/>
+          <path d="M27 130v14M43 130v14" stroke="#0e3a40" stroke-width="2.600" stroke-linecap="round"/>
+          <path d="M19 144l-1 5M35 147v5M51 144l1 5" stroke="#0e3a40" stroke-width="2" stroke-linecap="round"/>
         </svg>
-      </button>
-      <svg class="jello" viewBox="0 0 90 70" width="90" height="70" aria-hidden="true" focusable="false">
-        <path d="M14 58Q12 16 45 14t31 44Z" fill="#ffd94a" fill-opacity=".8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-        <g transform="rotate(-8 45 42)"><rect x="27" y="38" width="38" height="9" rx="3" fill="#33434a"/><rect x="29" y="30" width="34" height="8" rx="4" fill="#586b73"/><rect x="27" y="47" width="38" height="4" rx="2" fill="#1f2c31"/></g>
-        <path d="M24 26q6-6 14-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-        <path d="M6 60h78" stroke="#0e3a40" stroke-width="3" stroke-linecap="round"/>
-      </svg>
-      <h2 id="h-writing" tabindex="-1">Writing</h2>
-
-      <h3>Blogs and articles</h3>
-      <p>The personal ones are out on the water. Pick one up.</p>
-      <p>I write on Medium as Mazhaiyil, which means 'in the rain'. I don't remember why I picked it, but I suspect it was raining.</p>
-      <p><a href="https://mazhaiyil.medium.com">Read Mazhaiyil on Medium</a></p>
-
-      <p class="gap">Two from my professional work.</p>
-      <ul class="work">
-        <li><a href="https://www.codilar.com/blog/how-much-does-an-apparel-ecommerce-website-cost">How Much Does an Apparel eCommerce Website Cost in 2026?</a></li>
-        <li><a href="https://www.codilar.com/blog/adobe-commerce-b2b-development-for-us-industrial-distributors-and-manufacturers">Adobe Commerce B2B Development for US Industrial Distributors and Manufacturers</a></li>
-      </ul>
-
-      <h3>Website copy</h3>
-      <p><a href="https://www.cherrycitykitties.com">Cherry City Kitties</a> is one of the websites I wrote the copy for. It's a site about cats (who doesn't like them).</p>
-      <div class="paw" aria-hidden="true">
-        <svg viewBox="0 0 70 120" focusable="false">
-          <path d="M20 0h30v74q4 6 4 16 0 22-19 22T16 90q0-10 4-16Z" fill="#f7a23b" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M21 18q14 6 28 0M21 36q14 6 28 0M21 54q14 6 28 0" fill="none" stroke="#d9801f" stroke-width="4" stroke-linecap="round"/>
-          <path d="M19 84q-3 16 8 24 8 5 16 0 11-8 8-24Z" fill="#fff6e2"/>
-          <path d="M29 98v11M41 98v11" stroke="#0e3a40" stroke-width="2.4" stroke-linecap="round"/>
+        <svg class="bloom" viewBox="0 0 40 40" focusable="false">
+          <g fill="#ff9db5" stroke="#0e3a40" stroke-width="2"><circle cx="20" cy="9" r="7"/><circle cx="30.500" cy="16.500" r="7"/><circle cx="26.500" cy="29" r="7"/><circle cx="13.500" cy="29" r="7"/><circle cx="9.500" cy="16.500" r="7"/></g>
+          <circle cx="20" cy="20" r="5.500" fill="#ffd338" stroke="#0e3a40" stroke-width="2"/>
         </svg>
         <i></i>
+      </div>
+      <div class="sheet memo">
+        <button type="button" class="prop clip" aria-label="Paperclip" aria-pressed="false">
+          <svg viewBox="0 0 40 90" width="40" height="90" aria-hidden="true" focusable="false">
+            <path d="M12 26v40a9 9 0 0 0 18 0V18a13 13 0 0 0-26 0v50" fill="none" stroke="#6f8f99" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <svg class="jello" viewBox="0 0 90 70" width="90" height="70" aria-hidden="true" focusable="false">
+          <path d="M14 58Q12 16 45 14t31 44Z" fill="#ffd94a" fill-opacity=".8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
+          <g transform="rotate(-8 45 42)"><rect x="27" y="38" width="38" height="9" rx="3" fill="#33434a"/><rect x="29" y="30" width="34" height="8" rx="4" fill="#586b73"/><rect x="27" y="47" width="38" height="4" rx="2" fill="#1f2c31"/></g>
+          <path d="M24 26q6-6 14-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+          <path d="M6 60h78" stroke="#0e3a40" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <h2 id="h-writing" tabindex="-1">Writing</h2>
+
+        <h3>Blogs and articles</h3>
+        <p>The personal ones are out on the water. Pick one up.</p>
+        <p>I write on Medium as Mazhaiyil, which means 'in the rain'. I don't remember why I picked it, but I suspect it was raining.</p>
+        <p><a href="https://mazhaiyil.medium.com">Read Mazhaiyil on Medium</a></p>
+
+        <p class="gap">Two from my professional work.</p>
+        <ul class="work">
+          <li><a href="https://www.codilar.com/blog/how-much-does-an-apparel-ecommerce-website-cost">How Much Does an Apparel eCommerce Website Cost in 2026?</a></li>
+          <li><a href="https://www.codilar.com/blog/adobe-commerce-b2b-development-for-us-industrial-distributors-and-manufacturers">Adobe Commerce B2B Development for US Industrial Distributors and Manufacturers</a></li>
+        </ul>
+
+        <h3>Website copy</h3>
+        <p><a href="https://www.cherrycitykitties.com">Cherry City Kitties</a> is one of the websites I wrote the copy for. It's a site about cats (who doesn't like them).</p>
       </div>
     </div>
 
@@ -383,21 +391,40 @@
     <div class="kick-wrap">
       <div class="scorebar">
         <div class="otter" aria-hidden="true">
-          <svg viewBox="0 0 116 66" aria-hidden="true" focusable="false">
-            <path d="M96 42q12 2 16 12" fill="none" stroke="#0e3a40" stroke-width="10" stroke-linecap="round"/>
-            <path d="M96 42q12 2 16 12" fill="none" stroke="#8a5a3c" stroke-width="6" stroke-linecap="round"/>
-            <ellipse cx="62" cy="38" rx="38" ry="15" fill="#8a5a3c" stroke="#0e3a40" stroke-width="2.6"/>
-            <ellipse cx="64" cy="35" rx="25" ry="8.500" fill="#f1dcc0"/>
-            <ellipse cx="97" cy="30" rx="6" ry="4" fill="#6d4329" stroke="#0e3a40" stroke-width="2.2"/><ellipse cx="100" cy="42" rx="6" ry="4" fill="#6d4329" stroke="#0e3a40" stroke-width="2.2"/>
-            <circle cx="14" cy="20" r="4" fill="#8a5a3c" stroke="#0e3a40" stroke-width="2.2"/>
-            <circle cx="24" cy="31" r="15.500" fill="#8a5a3c" stroke="#0e3a40" stroke-width="2.6"/>
-            <ellipse cx="18" cy="34" rx="9" ry="7.500" fill="#f1dcc0"/>
-            <ellipse cx="13" cy="31" rx="3.200" ry="2.400" fill="#0e3a40"/>
-            <path d="M22 26q2.500-3 5 0M17 37q2 2 4 0" fill="none" stroke="#0e3a40" stroke-width="2" stroke-linecap="round"/>
-            <path d="M10 35l-7 1M10 37l-6 4" stroke="#0e3a40" stroke-width="1.2" stroke-linecap="round"/>
-            <ellipse cx="52" cy="29" rx="6" ry="4" fill="#6d4329" stroke="#0e3a40" stroke-width="2.2"/>
-            <g class="arm"><path d="M66 30q4-10 12-14" fill="none" stroke="#0e3a40" stroke-width="9" stroke-linecap="round"/><path d="M66 30q4-10 12-14" fill="none" stroke="#6d4329" stroke-width="5" stroke-linecap="round"/></g>
-            <path d="M6 58q13-6 26 0t26 0t26 0t26 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+          <svg viewBox="0 0 128 104" focusable="false">
+            <!-- the second otter. They hold paws so nobody drifts off. -->
+            <g transform="translate(14 38) scale(.9)">
+              <path d="M96 42q12 2 16 12" fill="none" stroke="#0e3a40" stroke-width="10" stroke-linecap="round"/>
+              <path d="M96 42q12 2 16 12" fill="none" stroke="#cf8552" stroke-width="6" stroke-linecap="round"/>
+              <ellipse cx="62" cy="38" rx="38" ry="15" fill="#cf8552" stroke="#0e3a40" stroke-width="2.6"/>
+              <ellipse cx="64" cy="35" rx="25" ry="8.5" fill="#f7d9ad"/>
+              <ellipse cx="97" cy="30" rx="6" ry="4" fill="#a85c34" stroke="#0e3a40" stroke-width="2.2"/><ellipse cx="100" cy="42" rx="6" ry="4" fill="#a85c34" stroke="#0e3a40" stroke-width="2.2"/>
+              <circle cx="14" cy="20" r="4" fill="#cf8552" stroke="#0e3a40" stroke-width="2.2"/>
+              <circle cx="24" cy="31" r="15.5" fill="#cf8552" stroke="#0e3a40" stroke-width="2.6"/>
+              <ellipse cx="18" cy="34" rx="9" ry="7.5" fill="#f7d9ad"/>
+              <ellipse cx="13" cy="31" rx="3.2" ry="2.4" fill="#0e3a40"/>
+              <path d="M22 26q2.5-3 5 0M17 37q2 2 4 0" fill="none" stroke="#0e3a40" stroke-width="2" stroke-linecap="round"/>
+              <path d="M10 35l-7 1M10 37l-6 4" stroke="#0e3a40" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M6 58q13-6 26 0t26 0t26 0t26 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+            </g>
+            <g>
+              <path d="M96 42q12 2 16 12" fill="none" stroke="#0e3a40" stroke-width="10" stroke-linecap="round"/>
+              <path d="M96 42q12 2 16 12" fill="none" stroke="#b9683c" stroke-width="6" stroke-linecap="round"/>
+              <ellipse cx="62" cy="38" rx="38" ry="15" fill="#b9683c" stroke="#0e3a40" stroke-width="2.6"/>
+              <ellipse cx="64" cy="35" rx="25" ry="8.5" fill="#f2c891"/>
+              <ellipse cx="97" cy="30" rx="6" ry="4" fill="#97492a" stroke="#0e3a40" stroke-width="2.2"/><ellipse cx="100" cy="42" rx="6" ry="4" fill="#97492a" stroke="#0e3a40" stroke-width="2.2"/>
+              <circle cx="14" cy="20" r="4" fill="#b9683c" stroke="#0e3a40" stroke-width="2.2"/>
+              <circle cx="24" cy="31" r="15.5" fill="#b9683c" stroke="#0e3a40" stroke-width="2.6"/>
+              <ellipse cx="18" cy="34" rx="9" ry="7.5" fill="#f2c891"/>
+              <ellipse cx="13" cy="31" rx="3.2" ry="2.4" fill="#0e3a40"/>
+              <path d="M22 26q2.5-3 5 0M17 37q2 2 4 0" fill="none" stroke="#0e3a40" stroke-width="2" stroke-linecap="round"/>
+              <path d="M10 35l-7 1M10 37l-6 4" stroke="#0e3a40" stroke-width="1.2" stroke-linecap="round"/>
+              <g class="arm"><path d="M66 30q4-10 12-14" fill="none" stroke="#0e3a40" stroke-width="9" stroke-linecap="round"/><path d="M66 30q4-10 12-14" fill="none" stroke="#97492a" stroke-width="5" stroke-linecap="round"/></g>
+            </g>
+            <!-- joined paws -->
+            <path d="M50 40q2 12 14 20" fill="none" stroke="#0e3a40" stroke-width="9" stroke-linecap="round"/>
+            <path d="M50 40q2 12 14 20" fill="none" stroke="#97492a" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="57" cy="52" r="5" fill="#a85c34" stroke="#0e3a40" stroke-width="2.2"/>
           </svg>
         </div>
         <div class="board" role="img" aria-label="Score. You 0, frog 0.">
@@ -490,26 +517,27 @@
       <h2 id="h-contact" tabindex="-1">Contact</h2>
       <div class="carry">
         <svg viewBox="0 84 340 246" role="group" aria-label="An otter in glasses carrying three books: Email, LinkedIn and Medium. Each book is a link.">
-          <ellipse cx="128" cy="318" rx="92" ry="8" fill="#0a3530" opacity=".14"/>
-          <path d="M70 286q-44 6-52-30" fill="none" stroke="#0e3a40" stroke-width="26" stroke-linecap="round"/>
-          <path d="M70 286q-44 6-52-30" fill="none" stroke="#8a5a3c" stroke-width="20" stroke-linecap="round"/>
+          <ellipse cx="124" cy="320" rx="96" ry="8" fill="#0a3530" opacity=".13"/>
+          <path d="M84 250Q52 300 6 304q-6 12 12 14 62 6 92-30Z" fill="#97492a"/>
           <g class="otter-body">
-            <ellipse cx="88" cy="312" rx="24" ry="9" fill="#6d4329" stroke="#0e3a40" stroke-width="3"/>
-            <ellipse class="foot-up" cx="150" cy="306" rx="24" ry="9" fill="#6d4329" stroke="#0e3a40" stroke-width="3"/>
-            <ellipse cx="116" cy="238" rx="54" ry="74" fill="#8a5a3c" stroke="#0e3a40" stroke-width="3"/>
-            <ellipse cx="120" cy="246" rx="33" ry="52" fill="#f1dcc0"/>
-            <circle cx="80" cy="104" r="12" fill="#8a5a3c" stroke="#0e3a40" stroke-width="3"/><circle cx="152" cy="104" r="12" fill="#8a5a3c" stroke="#0e3a40" stroke-width="3"/>
-            <circle cx="116" cy="138" r="46" fill="#8a5a3c" stroke="#0e3a40" stroke-width="3"/>
-            <ellipse cx="116" cy="156" rx="28" ry="20" fill="#f1dcc0"/>
-            <ellipse cx="116" cy="147" rx="8" ry="5.500" fill="#0e3a40"/>
-            <path d="M116 153v6q-6 6-12 1M116 159q6 6 12 1" fill="none" stroke="#0e3a40" stroke-width="2.6" stroke-linecap="round"/>
-            <path d="M92 158l-22-4M92 163l-21 6M140 158l22-4M140 163l21 6" stroke="#0e3a40" stroke-width="1.6" stroke-linecap="round"/>
-            <circle cx="98" cy="132" r="4" fill="#0e3a40"/><circle cx="134" cy="130" r="4" fill="#0e3a40"/>
-            <path d="M88 116q8-6 16-2M126 112q8-3 15 3" fill="none" stroke="#0e3a40" stroke-width="3" stroke-linecap="round"/>
-            <g class="specs" fill="rgba(255,255,255,.35)" stroke="#0e3a40" stroke-width="3.400">
-              <circle cx="97" cy="133" r="15"/><circle cx="135" cy="131" r="15"/><path d="M112 132h8M82 132l-12-5M150 129l11-6" fill="none"/>
+            <path d="M70 318q-2-14 16-14t20 14ZM132 318q-2-14 18-14t18 14Z" fill="#97492a"/>
+            <path d="M80 311v7M90 311v7M144 311v7M154 311v7" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M66 190q-10 104 16 122h72q26-18 16-122Q168 112 118 112T66 190Z" fill="#b9683c"/>
+            <path d="M68 262q0 40 14 50h72q14-10 14-50-18 18-50 18t-50-18Z" fill="#97492a" opacity=".55"/>
+            <path d="M94 200q-6 94 24 96 30-2 24-96-24-14-48 0Z" fill="#f2c891"/>
+            <circle cx="74" cy="106" r="13" fill="#b9683c"/><circle cx="162" cy="106" r="13" fill="#b9683c"/>
+            <circle cx="75" cy="107" r="6.5" fill="#97492a"/><circle cx="161" cy="107" r="6.5" fill="#97492a"/>
+            <ellipse cx="118" cy="140" rx="54" ry="44" fill="#b9683c"/>
+            <path d="M70 152q4-18 48-18t48 18q0 32-48 32t-48-32Z" fill="#f2c891"/>
+            <path d="M108 146q10-7 20 0 0 9-10 12-10-3-10-12Z" fill="#5a2a1a"/>
+            <path d="M118 158v5q-9 9-17 2M118 163q9 9 17 2" fill="none" stroke="#5a2a1a" stroke-width="2.8" stroke-linecap="round"/>
+            <path d="M94 162l-20-5M94 167l-20 3M95 172l-17 9M142 162l20-5M142 167l20 3M141 172l17 9" stroke="#97492a" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="97" cy="130" r="5.5" fill="#5a2a1a"/><circle cx="139" cy="128" r="5.5" fill="#5a2a1a"/>
+            <circle cx="95.5" cy="128" r="1.7" fill="#fff"/><circle cx="137.5" cy="126" r="1.7" fill="#fff"/>
+            <g class="specs" fill="rgba(255,255,255,.3)" stroke="#0e3a40" stroke-width="3.4">
+              <circle cx="97" cy="130" r="16"/><circle cx="139" cy="128" r="16"/><path d="M113 129h10M81 129l-14-5M155 126l13-6" fill="none"/>
             </g>
-            <path class="sweat" d="M166 96q5 8 0 12t-5-4q0-4 5-8Z" fill="#bfe6ff" stroke="#0e3a40" stroke-width="2"/>
+            <path class="sweat" d="M176 92q5 8 0 12t-5-4q0-4 5-8Z" fill="#bfe6ff" stroke="#0e3a40" stroke-width="2"/>
           </g>
           <g class="stack">
           <a class="book b1" href="mailto:aakash14ash@gmail.com" aria-label="Email">
@@ -538,10 +566,12 @@
           </a>
           </g>
           <g class="otter-arms">
-            <path d="M152 206q26 34 62 30" fill="none" stroke="#0e3a40" stroke-width="22" stroke-linecap="round"/>
-            <path d="M152 206q26 34 62 30" fill="none" stroke="#8a5a3c" stroke-width="16" stroke-linecap="round"/>
-            <path d="M84 214q50 46 112 26" fill="none" stroke="#0e3a40" stroke-width="22" stroke-linecap="round"/>
-            <path d="M84 214q50 46 112 26" fill="none" stroke="#8a5a3c" stroke-width="16" stroke-linecap="round"/>
+            <path d="M156 204q24 36 60 32" fill="none" stroke="#97492a" stroke-width="22" stroke-linecap="round"/>
+            <path d="M156 202q24 34 60 30" fill="none" stroke="#b9683c" stroke-width="17" stroke-linecap="round"/>
+            <path d="M210 226l8 3M209 232l8 2M207 238l8 1" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M82 214q50 48 114 28" fill="none" stroke="#97492a" stroke-width="22" stroke-linecap="round"/>
+            <path d="M82 212q50 46 114 26" fill="none" stroke="#b9683c" stroke-width="17" stroke-linecap="round"/>
+            <path d="M190 232l8 2M190 238l8 1M189 244l8-1" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
           </g>
         </svg>
       </div>

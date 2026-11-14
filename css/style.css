@@ -827,32 +827,54 @@ button.prop svg { display: block; width: 100%; height: auto; transition: transfo
 
 /* ---------- cat's paw, frog moods, scoreboard otter, contact otter ---------- */
 
-/* a cat's paw reaching out from under the Writing sheet to dab the water */
-.paw { position: absolute; top: calc(100% - 0.4rem); right: 18%; width: 2.9rem; pointer-events: none; }
-.paw svg { display: block; width: 100%; height: auto; transform-origin: 50% 0; animation: dab 4.2s ease-in-out infinite; }
-.paw i {
+/* A cat hides under the Writing sheet. Its paw slides out, plucks the flower and takes it back under. */
+.sheet-wrap { position: relative; min-width: 0; }
+.reach { position: absolute; top: 100%; left: 62%; width: 3rem; height: 0; pointer-events: none; }
+.reach .paw {
   position: absolute;
-  left: 50%;
-  top: 104%;
+  left: 0;
+  top: -6.75rem;
+  width: 3rem;
+  height: auto;
+  transform-origin: 50% 0;
+  animation: paw-out 8s ease-in-out infinite;
+}
+.reach .bloom { position: absolute; left: 0.75rem; top: 4.3rem; width: 1.5rem; height: auto; animation: bloom 8s ease-in-out infinite; }
+.reach i {
+  position: absolute;
+  left: 1.5rem;
+  top: 5.1rem;
   width: 0.6rem;
   height: 0.35rem;
   margin: -0.17rem 0 0 -0.3rem;
   border: 2px solid #fff;
   border-radius: 50%;
   opacity: 0;
-  animation: dab-ring 4.2s ease-out infinite;
+  animation: bloom-ring 8s ease-out infinite;
 }
-@keyframes dab {
-  0%, 38%, 100% { transform: translateY(-34%) rotate(4deg); }
-  46% { transform: translateY(0) rotate(-3deg); }
-  52% { transform: translateY(-9%) rotate(2deg); }
-  58% { transform: translateY(0) rotate(-2deg); }
-  70% { transform: translateY(-34%) rotate(5deg); }
+/* hidden, slides out, pats the flower twice, drags it home, stays hidden */
+@keyframes paw-out {
+  0%, 30% { transform: translateY(0) rotate(0deg); }
+  44% { transform: translateY(4.6rem) rotate(-4deg); }
+  48% { transform: translateY(4rem) rotate(3deg); }
+  53% { transform: translateY(4.9rem) rotate(-2deg); }
+  58% { transform: translateY(4.9rem) rotate(0deg); }
+  72%, 100% { transform: translateY(0) rotate(0deg); }
 }
-@keyframes dab-ring {
-  0%, 45% { opacity: 0; transform: scale(1); }
-  47% { opacity: 0.95; transform: scale(1); }
-  75% { opacity: 0; transform: scale(9); }
+/* drifts in on the water, gets plucked, goes under the sheet with the paw */
+@keyframes bloom {
+  0% { transform: translate(5rem, 0.6rem) rotate(-40deg); opacity: 0; }
+  8% { opacity: 1; }
+  30% { transform: translate(0.4rem, 0) rotate(8deg); opacity: 1; }
+  44% { transform: translate(0, 0.1rem) rotate(-4deg); opacity: 1; }
+  53%, 58% { transform: translate(0, 0.25rem) rotate(6deg); opacity: 1; }
+  72% { transform: translate(0, -4.7rem) rotate(20deg); opacity: 1; }
+  73%, 100% { transform: translate(0, -4.7rem); opacity: 0; }
+}
+@keyframes bloom-ring {
+  0%, 52% { opacity: 0; transform: scale(1); }
+  54% { opacity: 0.95; transform: scale(1); }
+  76% { opacity: 0; transform: scale(9); }
   100% { opacity: 0; transform: scale(9); }
 }
 
@@ -903,7 +925,7 @@ button.prop svg { display: block; width: 100%; height: auto; transition: transfo
 /* scoreboard, flipped by hand. Well, by paw. */
 .kick-wrap { min-width: 0; margin-left: 6%; width: min(23rem, 100%); pointer-events: auto; }
 .kick-wrap .kick { margin: 0.6rem 0 0; width: 100%; }
-.scorebar { position: relative; height: 4.6rem; }
+.scorebar { position: relative; height: 6rem; }
 .board {
   position: absolute;
   right: 0;
@@ -946,10 +968,10 @@ button.prop svg { display: block; width: 100%; height: auto; transition: transfo
 .board .card.flip { animation: card-flip 0.5s ease-in-out; }
 @keyframes card-flip { 0% { transform: perspective(12rem) rotateX(0); } 50% { transform: perspective(12rem) rotateX(-88deg); } 100% { transform: perspective(12rem) rotateX(0); } }
 
-.otter { position: absolute; left: 4%; bottom: -0.1rem; width: 6.4rem; transition: left 0.75s cubic-bezier(0.4, 0, 0.2, 1); }
+.otter { position: absolute; left: 4%; bottom: -0.3rem; width: 7.2rem; transition: left 0.75s cubic-bezier(0.4, 0, 0.2, 1); }
 .otter svg { display: block; width: 100%; height: auto; animation: otter-drift 9s ease-in-out infinite; }
 .otter .arm { transform-origin: 66px 30px; transform: rotate(38deg); transition: transform 0.25s ease; }
-.otter.go { left: calc(100% - 15.2rem); }
+.otter.go { left: calc(100% - 15.8rem); }
 .otter.go svg { animation: none; }
 .otter.tap .arm { transform: rotate(-22deg); }
 @keyframes otter-drift {
@@ -990,10 +1012,10 @@ button.prop svg { display: block; width: 100%; height: auto; transition: transfo
   .kick-wrap { margin: 3.5rem auto 0; }
   .kick-wrap .kick { margin: 0.6rem 0 0; }
   .frog-say { left: 60%; max-width: 9rem; font-size: 0.84rem; }
-  .paw { right: 14%; }
+  .reach { left: 58%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .paw svg, .paw i, .frog svg, .frog .zzz path, .otter svg, .carry .stack, .carry .otter-body, .carry .otter-arms, .carry .sweat, .board .card.flip { animation: none !important; }
+  .reach .paw, .reach .bloom, .reach i, .frog svg, .frog .zzz path, .otter svg, .carry .stack, .carry .otter-body, .carry .otter-arms, .carry .sweat, .board .card.flip { animation: none !important; }
   .frog[data-mood="asleep"] .zzz path { opacity: 1; }
 }

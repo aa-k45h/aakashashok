@@ -52,9 +52,9 @@ Every path in the site is relative (`./css/...`, `./js/...`), so it works from a
 - Writing desk (Writing): hover, tap or tab to the window, journal, headphones and mug. The four notes are drafts in Aakash's voice. Edit the `data-note` text in `index.html`, under the comment that starts "WRITING HABITS DESK".
 - Prompt jar (About): click the jar and four slips float out.
 - The frog (About) naps on its lily pad until the game scrolls into view, then wakes up and explains the game in a chat bubble. Its lines are in `js/extras.js`.
-- Scoreboard (About): a hand-flipped board above the goal. A floating otter paddles over and flips the card after every goal and every save.
+- Scoreboard (About): a hand-flipped board above the goal. Two otters float beside it holding paws. They paddle over and one flips the card after every goal and every save.
 - Contact: an otter in glasses carries three books. The spines read Email, LinkedIn and Medium, and each book is the link.
-- A cat's paw reaches out from under the Writing sheet and dabs the water.
+- A cat hides under the Writing sheet. Its paw slides out, plucks a small flower floating by and takes it back under.
 - Penalty kick (About): drag or flick the beach volleyball into the net. The toy frog sits still and its tongue stops slow shots and anything hit straight at it. Fast shots to the side go in. A goal brings the sun out, a save darkens the sky. With a keyboard, focus the ball, aim with the left and right arrows and press Space.
 
 ## Night, fireflies and rain
