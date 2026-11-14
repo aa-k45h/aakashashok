@@ -232,6 +232,7 @@ export function createPond({ canvas, padEls, calm }) {
     el, nav: true, r: 1,
     x: +el.style.getPropertyValue('--x'), y: +el.style.getPropertyValue('--y'),
     px: +el.style.getPropertyValue('--px'), py: +el.style.getPropertyValue('--py'),
+    cx: +el.style.getPropertyValue('--cx'), cy: +el.style.getPropertyValue('--cy'),
     turn: [0.5, 2.4, -1.1, 3.6][i % 4]
   }, i));
   // loose pads, placed by hand so they do not line up
@@ -409,6 +410,7 @@ export function createPond({ canvas, padEls, calm }) {
   }
 
   let placed = false;
+  let compact = false;
   function layout() {
     W = window.innerWidth; H = window.innerHeight;
     const aspect = W / H;
@@ -422,8 +424,14 @@ export function createPond({ canvas, padEls, calm }) {
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld();
     for (const p of pads) {
-      toWorld(((portrait ? p.px : p.x) / 100) * W, ((portrait ? p.py : p.y) / 100) * H, p.home);
-      p.r = (p.nav ? (portrait ? 0.92 : 1) : p.r);
+      let fx = portrait ? p.px : p.x, fy = portrait ? p.py : p.y;
+      if (p.nav && compact) {
+        // parked: a column on the right edge, or off the bottom on a phone
+        fx = portrait ? p.px : p.cx;
+        fy = portrait ? 135 : p.cy;
+      }
+      toWorld((fx / 100) * W, (fy / 100) * H, p.home);
+      if (p.nav) p.r = compact ? 0.5 : portrait ? 0.92 : 1;
       if (!placed) p.group.position.copy(p.home);
     }
     const s = toWorld(W * (portrait ? 0.2 : 0.1), -H * 0.06);
@@ -475,8 +483,8 @@ export function createPond({ canvas, padEls, calm }) {
     const cur = navPads[current];
     lotusScale += ((cur ? 1 : 0) - lotusScale) * Math.min(1, dt * 4);
     if (cur) {
-      lotus.position.set(cur.group.position.x - cur.r * 0.52, 0.05 - cur.press * 0.05, cur.group.position.z - cur.r * 0.3);
-      lotus.scale.setScalar(lotusScale * (0.95 + Math.sin(t * 1.3) * 0.02));
+      lotus.position.set(cur.group.position.x - cur.group.scale.x * 0.52, 0.05 - cur.press * 0.05, cur.group.position.z - cur.group.scale.x * 0.3);
+      lotus.scale.setScalar(lotusScale * cur.group.scale.x * (0.95 + Math.sin(t * 1.3) * 0.02));
       lotus.rotation.y = t * 0.05;
     }
 
@@ -541,6 +549,7 @@ export function createPond({ canvas, padEls, calm }) {
     start, stop, layout,
     duckScreen,
     setCurrent(i) { current = i; },
+    setCompact(on) { if (on !== compact) { compact = on; layout(); } },
     setHover(i, on) { if (navPads[i]) navPads[i].hover = on ? 1 : 0; },
     // mouse: the duck trails the cursor like a pet
     pointerMove(px, py) {

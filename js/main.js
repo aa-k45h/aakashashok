@@ -8,6 +8,7 @@ const jumpEls = [...document.querySelectorAll('.jump a')];
 const sections = ['intro', 'writing', 'about', 'contact'].map((id) => document.getElementById(id));
 const duckEl = document.getElementById('duck');
 
+const portrait = window.matchMedia('(orientation: portrait)');
 let pond = null; // whichever pond is running: 3D or flat
 let current = 0;
 let busy = false;
@@ -59,7 +60,7 @@ function createFlatPond() {
     start() { last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); },
     stop() { cancelAnimationFrame(raf); },
     layout() {},
-    setCurrent() {}, setHover() {},
+    setCurrent() {}, setHover() {}, setCompact() {},
     pointerMove(x, y) { if (mode !== 'nav' && mode !== 'drag') { target.x = x; target.y = y; mode = 'follow'; } },
     tap(x, y, callDuck) { ripple(x, y); if (callDuck && mode !== 'nav' && mode !== 'drag') { target.x = x; target.y = y; mode = 'idle'; } },
     goTo(i, done) {
@@ -92,8 +93,10 @@ function arrive(i, focus) {
 // The duck swims to the pad first. Then the page moves.
 function go(i, focus) {
   if (i < 0 || i >= sections.length) return;
-  if (!pond || calm) {
-    if (pond) pond.goTo(i, null);
+  // on a phone the pads are parked off screen once you scroll, so there is nowhere to swim
+  const padsAway = root.classList.contains('compact') && portrait.matches;
+  if (!pond || calm || padsAway) {
+    if (pond && !padsAway) pond.goTo(i, null);
     arrive(i, focus);
     return;
   }
@@ -140,8 +143,33 @@ if ('IntersectionObserver' in window) {
   sections.forEach((s) => seen.observe(s));
 }
 
+// Past the hero, the pads park at the edge so the writing has room.
+function checkCompact() {
+  const on = window.scrollY > window.innerHeight * 0.45;
+  if (on === root.classList.contains('compact')) return;
+  root.classList.toggle('compact', on);
+  if (pond) pond.setCompact(on);
+}
+window.addEventListener('scroll', checkCompact, { passive: true });
+checkCompact();
+
+// ---------- Medium lines: bottles, boats and a bird ----------
+// Without JS every line is simply shown. With JS they start folded away.
+document.querySelectorAll('.floater').forEach((li) => {
+  const btn = li.querySelector('button');
+  const note = li.querySelector('.note');
+  const set = (open) => {
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    note.hidden = !open;
+    li.classList.toggle('open', open);
+    note.classList.toggle('unfold', open);
+  };
+  set(false);
+  btn.addEventListener('click', () => set(note.hidden));
+});
+
 // ---------- input ----------
-const onWater = (t) => !(t.closest && t.closest('a, button, .sheet, #duck'));
+const onWater = (t) => !(t.closest && t.closest('a, button, .sheet, .note, #duck'));
 
 window.addEventListener('pointermove', (e) => {
   if (pond && e.pointerType === 'mouse') pond.pointerMove(e.clientX, e.clientY);
@@ -212,6 +240,7 @@ function boot() {
     const p = createPond({ canvas, padEls, calm });
     pond = p;
     pond.setCurrent(current);
+    pond.setCompact(root.classList.contains('compact'));
     // in 3D the DOM duck is only a grab handle that tracks the real one
     const track = () => {
       if (pond !== p) return;

@@ -131,7 +131,18 @@ h1:focus-visible, h2:focus-visible { outline-style: dashed; outline-width: 2px; 
 .pad:nth-child(4) { rotate: -2deg; }
 .pad[aria-current="true"] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
+/* Once you scroll past the hero, the pads park along the right edge. */
+.compact .pad {
+  --d: 5.6rem;
+  left: calc(var(--cx) * 1%);
+  top: calc(var(--cy) * 1%);
+  font-size: 0.82rem;
+}
+.pond-flat .pad { transition: left 0.7s ease, top 0.7s ease, width 0.7s ease, height 0.7s ease; }
+
 @media (orientation: portrait) {
+  /* no room for parked pads on a phone, the links up top take over */
+  .compact .pads { visibility: hidden; }
   .pad {
     --d: clamp(6.2rem, 31vw, 9rem);
     left: calc(var(--px) * 1%);
@@ -217,16 +228,31 @@ h1 {
   max-width: 27rem;
   font-size: clamp(1.02rem, 1.35vw, 1.15rem);
 }
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .stop {
   min-height: 100vh;
   min-height: 100svh;
-  padding: 16vh 6vw 10vh 7vw;
+  padding: 16vh 13vw 10vh 7vw;
   display: flex;
   align-items: flex-start;
 }
+.stop.split {
+  display: grid;
+  grid-template-columns: min(34rem, 42vw) minmax(0, 1fr);
+  gap: 5vw;
+}
 .sheet {
+  position: relative;
   width: min(34rem, 42vw);
-  padding: 2.4rem 2.5rem 2.8rem;
+  padding: 2.4rem 2.5rem 2.6rem;
   background: var(--paper);
   border: 2px solid var(--ink);
   /* Uneven corners so it reads as a torn-off page and not a card. */
@@ -234,23 +260,175 @@ h1 {
   box-shadow: 0.55rem 0.7rem 0 rgba(14, 58, 64, 0.16);
   rotate: -0.7deg;
 }
+.split .sheet { width: auto; }
 #about .sheet { rotate: 0.6deg; margin-left: 3vw; }
 #contact .sheet { rotate: -0.3deg; margin-left: 1vw; }
 
+/* Writing: office memo paper, held with a paperclip */
+.memo {
+  background:
+    linear-gradient(#c9d6d4, #c9d6d4) 0 5.9rem / 100% 2px no-repeat,
+    #fbf7e6;
+}
+
 h2 {
-  margin: 0 0 0.9rem;
+  margin: 0 0 1.5rem;
   font-family: var(--text);
   font-weight: 800;
   font-size: clamp(2.1rem, 4.2vw, 3.1rem);
   line-height: 1.05;
   letter-spacing: -0.035em;
 }
+h3 {
+  margin: 2.1rem 0 0.6rem;
+  font: 800 1.22rem/1.2 var(--text);
+  letter-spacing: -0.025em;
+}
+h2 + h3 { margin-top: 0; }
+.sheet p { margin: 0 0 0.75rem; }
+.sheet p.gap { margin-top: 1.7rem; }
+.sheet p:last-child { margin-bottom: 0; }
+
+.sheet a, .note a {
+  color: var(--ink);
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: var(--koi);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.sheet a:hover, .note a:hover { text-decoration-thickness: 4px; }
+
+.work { list-style: none; margin: 0; padding: 0; }
+.work li {
+  display: grid;
+  grid-template-columns: 3.1rem 1fr;
+  gap: 0.85rem;
+  align-items: start;
+  margin-bottom: 0.9rem;
+  line-height: 1.4;
+}
+/* sticky notes */
+.tag {
+  padding: 0.28rem 0 0.34rem;
+  background: #ffe98a;
+  border-bottom: 2px solid #e2c54e;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1;
+  rotate: -3deg;
+}
+.work li:nth-child(2) .tag { rotate: 2deg; background: #ffdf7a; }
+
 .todo {
-  margin: 0;
   padding: 0.7rem 0.9rem;
   border: 2px dashed var(--koi);
   border-radius: 0.4rem;
-  font-size: 0.98rem;
+  font-size: 0.95rem;
+}
+
+.prop { position: absolute; pointer-events: none; }
+.clip { top: -1.6rem; right: 2.4rem; rotate: 7deg; }
+.umbrella { top: -4.1rem; right: 1.6rem; width: 5.4rem; height: auto; rotate: 16deg; }
+.atom { top: -2rem; right: 1.5rem; width: 4.4rem; height: auto; rotate: -12deg; }
+
+.reach { margin: 0; }
+.reach div {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.5rem;
+  padding: 0.7rem 0;
+  border-top: 2px solid rgba(14, 58, 64, 0.14);
+}
+.reach div:first-child { border-top: 0; padding-top: 0; }
+.reach dt { font-weight: 800; }
+.reach dd { margin: 0; overflow-wrap: anywhere; }
+
+/* Medium lines, floating beside the sheet */
+.drift {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.9rem;
+}
+.floater { margin-left: var(--dx, 0); }
+.floater:nth-child(1) { --dx: 4%; }
+.floater:nth-child(2) { --dx: 31%; }
+.floater:nth-child(3) { --dx: 9%; }
+.floater:nth-child(4) { --dx: 35%; }
+.floater:nth-child(5) { --dx: 15%; }
+.floater button {
+  display: block;
+  margin: 0;
+  padding: 0.2rem;
+  background: none;
+  border: 0;
+  border-radius: 1rem;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: bob 5.2s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
+}
+.floater:nth-child(2) button { animation-duration: 6.1s; animation-delay: -2s; }
+.floater:nth-child(3) button { animation-name: hover-bird; animation-duration: 3.4s; }
+.floater:nth-child(4) button { animation-duration: 4.6s; animation-delay: -3.1s; }
+.floater:nth-child(5) button { animation-duration: 5.7s; animation-delay: -1.2s; }
+.floater svg { display: block; width: 10.5rem; height: auto; transition: transform 0.4s ease, opacity 0.4s ease; }
+.floater button:hover svg { transform: rotate(-4deg) translateY(-3px); }
+.bird .wing { transform-origin: 70px 42px; animation: flap 0.9s ease-in-out infinite alternate; }
+/* picked up: the boat flattens, the bottle tips, the bird lets go */
+.boat.open svg { transform: scale(0.72) rotate(-10deg); opacity: 0.55; }
+.bottle.open svg { transform: rotate(24deg); }
+.bird.open svg { transform: translateY(-10px); }
+
+.note {
+  width: min(20rem, 100%);
+  margin-top: 0.3rem;
+  padding: 1rem 1.15rem 1.05rem;
+  pointer-events: auto;
+  /* two faint creases, like paper that was folded */
+  background:
+    linear-gradient(90deg, rgba(14, 58, 64, 0) 49.6%, rgba(14, 58, 64, 0.09) 50%, rgba(14, 58, 64, 0) 50.4%),
+    linear-gradient(rgba(14, 58, 64, 0) 54%, rgba(14, 58, 64, 0.08) 54.6%, rgba(14, 58, 64, 0) 55.2%),
+    var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 0.3rem 0.9rem 0.4rem 0.7rem;
+  box-shadow: 0.35rem 0.45rem 0 rgba(14, 58, 64, 0.14);
+  rotate: -1.2deg;
+  transform-origin: 18% 0;
+}
+.floater:nth-child(even) .note { rotate: 0.9deg; }
+.note[hidden] { display: none; }
+.note.unfold { animation: unfold 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+.note blockquote {
+  margin: 0 0 0.65rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.42;
+  letter-spacing: -0.014em;
+}
+.note a { font-size: 0.9rem; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50% { transform: translateY(6px) rotate(1.8deg); }
+}
+@keyframes hover-bird {
+  0%, 100% { transform: translate(0, 0); }
+  35% { transform: translate(5px, -7px); }
+  70% { transform: translate(-3px, 3px); }
+}
+@keyframes flap {
+  from { transform: rotate(0deg) scaleY(1); }
+  to { transform: rotate(16deg) scaleY(0.72); }
+}
+@keyframes unfold {
+  0% { transform: scale(0.25, 0.08) rotate(-9deg); opacity: 0; }
+  55% { transform: scale(1, 0.55) rotate(2deg); opacity: 1; }
+  100% { transform: none; }
 }
 
 @media (max-width: 760px), (orientation: portrait) {
@@ -259,11 +437,19 @@ h2 {
   h1 { white-space: normal; line-height: 0.95; padding-top: 0.2em; font-size: clamp(4.4rem, 24vw, 7rem); }
   .tagline { margin-top: 0.9rem; }
   .stop { padding: 12vh 5vw 8vh; }
-  .sheet, #about .sheet, #contact .sheet { width: 100%; margin-left: 0; padding: 1.7rem 1.4rem 2rem; }
+  .stop.split { display: block; }
+  .sheet, #about .sheet, #contact .sheet { width: 100%; margin-left: 0; padding: 1.9rem 1.35rem 2rem; }
+  .drift { margin-top: 3rem; }
+  .floater:nth-child(2) { --dx: 22%; }
+  .floater:nth-child(3) { --dx: 5%; }
+  .floater:nth-child(4) { --dx: 26%; }
+  .floater:nth-child(5) { --dx: 10%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   #pond { transition: none; }
   .flat-ripple { animation-duration: 0.01s; }
+  .floater button, .bird .wing, .note.unfold { animation: none; }
+  .floater svg, .pond-flat .pad { transition: none; }
 }

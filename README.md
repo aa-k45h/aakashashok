@@ -6,9 +6,9 @@ Static files only. There is no build step and no backend, and nothing tracks vis
 
 ## Status
 
-Stage 1 of 3: pond, hero, duck navigation and the lily pad skeleton.
-The Writing, About and Contact sections hold marked `[PLACEHOLDER]` blocks until Stage 2.
-Sound, the penalty kick, the remote, the prompt jar and the desk come in Stage 3.
+Stage 2 of 3: the pond, the duck, and all the sections with their content.
+Two blocks in the Writing section are still marked `[PLACEHOLDER]`: website and landing page copy, and social and short-form. Aakash will supply those.
+Sound, the penalty kick, the remote, the prompt jar, the desk and the Easter eggs come in Stage 3.
 
 ## Run it locally
 
@@ -41,6 +41,8 @@ Every path in the site is relative (`./css/...`, `./js/...`), so it works from a
 
 - Mouse: the duck follows the cursor. Click a lily pad and the duck swims there, then the page moves.
 - Touch: drag the duck and drop it on a lily pad. Tapping a pad works too.
+- The Medium lines float beside the Writing sheet as paper boats, bottles and a bird. Click one to unfold it. With JS off they are all shown.
+- Once you scroll past the hero, the lily pads park along the right edge. On a phone they slide away and the links up top take over.
 - Keyboard: Tab to a lily pad and press Enter, or press 1, 2, 3 or 4. The links in the top corner do the same job.
 - Reduced motion: the water slows down, cursor ripples stop and the page jumps without waiting for the duck.
 - No WebGL: a flat pond with the same pads and a small drawn duck takes over.
@@ -56,7 +58,7 @@ vendor/           Three.js r160
 assets/fonts/     Sacramento (the name) and Manrope (everything else)
 ```
 
-To move a lily pad, edit its `--x` and `--y` (landscape) or `--px` and `--py` (portrait) values in `index.html`. They are percentages of the screen.
+To move a lily pad, edit its `--x` and `--y` (landscape), `--px` and `--py` (portrait) or `--cx` and `--cy` (parked) values in `index.html`. They are percentages of the screen.
 
 ## Credits
 
