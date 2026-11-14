@@ -172,7 +172,7 @@ document.querySelectorAll('.floater').forEach((li) => {
 });
 
 // ---------- input ----------
-const onWater = (t) => !(t.closest && t.closest('a, button, .sheet, .note, .kick, .desk, .telly, .jar-wrap, #duck'));
+const onWater = (t) => !(t.closest && t.closest('a, button, .sheet, .note, .kick-wrap, .desk, .telly, .jar-wrap, #duck'));
 
 window.addEventListener('pointermove', (e) => {
   if (pond && e.pointerType === 'mouse') pond.pointerMove(e.clientX, e.clientY);

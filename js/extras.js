@@ -210,6 +210,65 @@ export function initExtras({ getPond, calm }) {
     const ball = { x: START.x, y: START.y, vx: 0, vy: 0, s: 1 };
     let held = false, state = 'live', raf = 0, last = 0, U = 1, lick = null, tried = false, lastP = null;
 
+    // the frog naps until someone shows up, then explains the game
+    const say = $('.frog-say', box), board = $('.board'), otter = $('.otter');
+    const score = { you: 0, frog: 0 };
+    let sayT = 0, moodT = 0, awake = false, tipT = 0;
+    const pick = (list) => list[Math.floor(Math.random() * list.length)];
+    function mood(m, backIn) {
+      clearTimeout(moodT);
+      frogEl.dataset.mood = m;
+      if (backIn) moodT = setTimeout(() => { frogEl.dataset.mood = awake ? 'awake' : 'asleep'; }, backIn);
+    }
+    function speak(text, ms = 4200) {
+      clearTimeout(sayT);
+      say.textContent = text;
+      say.classList.add('on');
+      sayT = setTimeout(() => say.classList.remove('on'), ms);
+    }
+    function wake() {
+      if (awake) return;
+      awake = true;
+      mood('waking', 900);
+      speak('Oh. Hello. Drag the ball into the net.', 4200);
+      clearTimeout(tipT);
+      tipT = setTimeout(() => { if (awake) speak('Slow shots are mine. Flick it fast.', 4500); }, 4700);
+    }
+    function nap() {
+      awake = false;
+      clearTimeout(tipT); clearTimeout(sayT);
+      say.classList.remove('on');
+      mood('asleep');
+    }
+    // the otter paddles over and flips the card by paw
+    function scored(side) {
+      score[side]++;
+      if (side === 'you') { mood('shock', 1900); speak(pick(['Fine. That one counts.', 'I was blinking.', 'Okay, that was quick.', 'Lucky.']), 2600); }
+      else { mood('smug', 1500); speak(pick(['Mine.', 'Too slow.', 'I barely moved.', 'Tongue beats ball.']), 2400); }
+      if (!board) return;
+      board.setAttribute('aria-label', `Score. You ${score.you}, frog ${score.frog}.`);
+      const card = $(`.card[data-side="${side}"]`, board);
+      const flip = () => {
+        card.classList.remove('flip');
+        void card.offsetWidth;
+        card.classList.add('flip');
+        setTimeout(() => { card.textContent = String(score[side] % 100); }, 250);
+        sfx('paper');
+      };
+      if (!otter || calm) { flip(); return; }
+      otter.classList.add('go');
+      setTimeout(() => { otter.classList.add('tap'); flip(); }, 800);
+      setTimeout(() => otter.classList.remove('tap'), 1150);
+      setTimeout(() => otter.classList.remove('go'), 1900);
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((en) => { if (en.isIntersecting) wake(); else nap(); });
+      }, { threshold: 0.45 }).observe(box);
+    } else {
+      wake();
+    }
+
     const measure = () => { U = box.clientWidth / 100; };
     function draw() {
       ballEl.style.transform = `translate(${(ball.x * U).toFixed(1)}px, ${(ball.y * U).toFixed(1)}px) rotate(${(ball.x * 7 + ball.y * 5).toFixed(0)}deg) scale(${ball.s.toFixed(2)})`;
@@ -235,6 +294,7 @@ export function initExtras({ getPond, calm }) {
       ball.vx = ball.vy = 0;
       box.classList.add('scored');
       sky('sun'); sfx('sun');
+      scored('you');
       setTimeout(reset, 2100);
     }
     function stuck() {
@@ -245,6 +305,7 @@ export function initExtras({ getPond, calm }) {
       lick.x = ball.x; lick.y = ball.y;
       ball.vx = ball.vy = 0;
       sky('dusk'); sfx('rumble');
+      scored('frog');
     }
     function step(now) {
       raf = 0;
@@ -402,7 +463,7 @@ export function initExtras({ getPond, calm }) {
   });
   // double-click the water and the duck jumps
   window.addEventListener('dblclick', (e) => {
-    if (e.target.closest && e.target.closest('a, button, .sheet, .note, .kick, .desk, .telly, .jar-wrap')) return;
+    if (e.target.closest && e.target.closest('a, button, .sheet, .note, .kick-wrap, .desk, .telly, .jar-wrap')) return;
     const pond = getPond();
     if (pond && pond.hop) pond.hop();
     sfx('splash');

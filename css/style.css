@@ -301,26 +301,7 @@ h2 + h3 { margin-top: 0; }
 .sheet a:hover, .note a:hover { text-decoration-thickness: 4px; }
 
 .work { list-style: none; margin: 0; padding: 0; }
-.work li {
-  display: grid;
-  grid-template-columns: 3.1rem 1fr;
-  gap: 0.85rem;
-  align-items: start;
-  margin-bottom: 0.9rem;
-  line-height: 1.4;
-}
-/* sticky notes */
-.tag {
-  padding: 0.28rem 0 0.34rem;
-  background: #ffe98a;
-  border-bottom: 2px solid #e2c54e;
-  font-size: 0.8rem;
-  font-weight: 800;
-  text-align: center;
-  line-height: 1;
-  rotate: -3deg;
-}
-.work li:nth-child(2) .tag { rotate: 2deg; background: #ffdf7a; }
+.work li { margin-bottom: 0.75rem; line-height: 1.4; }
 
 .todo {
   padding: 0.7rem 0.9rem;
@@ -333,18 +314,6 @@ h2 + h3 { margin-top: 0; }
 .clip { top: -1.6rem; right: 2.4rem; rotate: 7deg; }
 .umbrella { top: -4.1rem; right: 1.6rem; width: 5.4rem; rotate: 16deg; }
 .atom { top: -2rem; right: 1.5rem; width: 4.4rem; rotate: -12deg; }
-
-.reach { margin: 0; }
-.reach div {
-  display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  gap: 0.5rem;
-  padding: 0.7rem 0;
-  border-top: 2px solid rgba(14, 58, 64, 0.14);
-}
-.reach div:first-child { border-top: 0; padding-top: 0; }
-.reach dt { font-weight: 800; }
-.reach dd { margin: 0; overflow-wrap: anywhere; }
 
 /* Medium lines, floating beside the sheet */
 .drift {
@@ -600,8 +569,6 @@ button.prop svg { display: block; width: 100%; height: auto; transition: transfo
   0%, 12%, 34%, 46%, 68%, 80%, 100% { transform: none; }
   6%, 40%, 74% { transform: translate(-4px, 2px) rotate(-0.5deg); }
 }
-.tag { transition: rotate 0.25s ease; }
-.work li:hover .tag { rotate: 7deg; }
 
 /* Writing desk */
 .aside { min-width: 0; }
@@ -856,4 +823,177 @@ button.prop svg { display: block; width: 100%; height: auto; transition: transfo
   .night.compact .jump a { color: var(--ink); }
   .night.compact .jump a[aria-current="true"] { border-bottom-color: var(--ink); }
   #rain { left: 4.6rem; bottom: 0.4rem; }
+}
+
+/* ---------- cat's paw, frog moods, scoreboard otter, contact otter ---------- */
+
+/* a cat's paw reaching out from under the Writing sheet to dab the water */
+.paw { position: absolute; top: calc(100% - 0.4rem); right: 18%; width: 2.9rem; pointer-events: none; }
+.paw svg { display: block; width: 100%; height: auto; transform-origin: 50% 0; animation: dab 4.2s ease-in-out infinite; }
+.paw i {
+  position: absolute;
+  left: 50%;
+  top: 104%;
+  width: 0.6rem;
+  height: 0.35rem;
+  margin: -0.17rem 0 0 -0.3rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: dab-ring 4.2s ease-out infinite;
+}
+@keyframes dab {
+  0%, 38%, 100% { transform: translateY(-34%) rotate(4deg); }
+  46% { transform: translateY(0) rotate(-3deg); }
+  52% { transform: translateY(-9%) rotate(2deg); }
+  58% { transform: translateY(0) rotate(-2deg); }
+  70% { transform: translateY(-34%) rotate(5deg); }
+}
+@keyframes dab-ring {
+  0%, 45% { opacity: 0; transform: scale(1); }
+  47% { opacity: 0.95; transform: scale(1); }
+  75% { opacity: 0; transform: scale(9); }
+  100% { opacity: 0; transform: scale(9); }
+}
+
+/* frog moods */
+.kick .frog svg { transform-origin: 50% 90%; }
+.frog .eyes-shut, .frog .mouth-flat, .frog .mouth-o, .frog .zzz { display: none; }
+.frog[data-mood="asleep"] .eyes-open, .frog[data-mood="asleep"] .mouth-smile { display: none; }
+.frog[data-mood="asleep"] .eyes-shut, .frog[data-mood="asleep"] .mouth-flat, .frog[data-mood="asleep"] .zzz { display: inline; }
+.frog[data-mood="asleep"] svg { animation: snooze 3.6s ease-in-out infinite; }
+.frog[data-mood="asleep"] .zzz path { animation: zzz 3.6s ease-in-out infinite; }
+.frog[data-mood="asleep"] .zzz path:nth-child(2) { animation-delay: 0.5s; }
+.frog[data-mood="asleep"] .zzz path:nth-child(3) { animation-delay: 1s; }
+.frog[data-mood="waking"] svg { animation: stretch 0.9s ease-out; }
+.frog[data-mood="shock"] .mouth-smile { display: none; }
+.frog[data-mood="shock"] .mouth-o { display: inline; }
+.frog[data-mood="shock"] .pupil { r: 2.6px; }
+.frog[data-mood="smug"] .eyes-open { display: none; }
+.frog[data-mood="smug"] .eyes-shut { display: inline; }
+@keyframes snooze { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.03, 0.96); } }
+@keyframes zzz { 0% { opacity: 0; transform: translate(-3px, 4px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translate(3px, -5px); } }
+@keyframes stretch { 0% { transform: scale(1, 1); } 35% { transform: scale(0.94, 1.12); } 70% { transform: scale(1.05, 0.95); } 100% { transform: none; } }
+
+/* what the frog has to say */
+.frog-say {
+  position: absolute;
+  left: 66%;
+  top: 22%;
+  z-index: 2;
+  width: max-content;
+  max-width: 11.5rem;
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.55rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 1rem 1rem 1rem 0.2rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.3;
+  rotate: 2deg;
+  opacity: 0;
+  transform: scale(0.6);
+  transform-origin: 0 100%;
+  transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.5);
+  pointer-events: none;
+}
+.frog-say.on { opacity: 1; transform: none; }
+
+/* scoreboard, flipped by hand. Well, by paw. */
+.kick-wrap { min-width: 0; margin-left: 6%; width: min(23rem, 100%); pointer-events: auto; }
+.kick-wrap .kick { margin: 0.6rem 0 0; width: 100%; }
+.scorebar { position: relative; height: 4.6rem; }
+.board {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 0.6rem 0.45rem;
+  background: #dba56b;
+  border: 2.5px solid var(--ink);
+  border-radius: 0.5rem 0.7rem 0.4rem 0.6rem;
+  box-shadow: 0.25rem 0.3rem 0 rgba(14, 58, 64, 0.2);
+  rotate: 1.5deg;
+}
+.board .who { width: 1.5rem; height: 1.5rem; }
+.board .card {
+  position: relative;
+  min-width: 1.9rem;
+  padding: 0.3rem 0.2rem 0.2rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 0.2rem;
+  font: 800 1.35rem/1 var(--text);
+  text-align: center;
+  transform-origin: 50% 0;
+}
+/* the ring each card hangs from */
+.board .card::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -0.55rem;
+  width: 0.5rem;
+  height: 0.6rem;
+  margin-left: -0.25rem;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: none;
+}
+.board .card.flip { animation: card-flip 0.5s ease-in-out; }
+@keyframes card-flip { 0% { transform: perspective(12rem) rotateX(0); } 50% { transform: perspective(12rem) rotateX(-88deg); } 100% { transform: perspective(12rem) rotateX(0); } }
+
+.otter { position: absolute; left: 4%; bottom: -0.1rem; width: 6.4rem; transition: left 0.75s cubic-bezier(0.4, 0, 0.2, 1); }
+.otter svg { display: block; width: 100%; height: auto; animation: otter-drift 9s ease-in-out infinite; }
+.otter .arm { transform-origin: 66px 30px; transform: rotate(38deg); transition: transform 0.25s ease; }
+.otter.go { left: calc(100% - 15.2rem); }
+.otter.go svg { animation: none; }
+.otter.tap .arm { transform: rotate(-22deg); }
+@keyframes otter-drift {
+  0%, 100% { transform: translate(0, 0) rotate(-3deg); }
+  30% { transform: translate(1.6rem, 0.2rem) rotate(2deg); }
+  65% { transform: translate(0.5rem, -0.15rem) rotate(-1deg); }
+}
+
+/* Contact: the otter and its three books */
+.carry { margin: -0.4rem auto 0; width: min(24rem, 100%); }
+.carry svg { display: block; width: 100%; height: auto; overflow: visible; }
+.carry text { font: 800 17px var(--text); letter-spacing: -0.01em; }
+.carry .stack { transform-origin: 232px 232px; animation: totter 3.4s ease-in-out infinite; }
+.carry .otter-body { transform-origin: 116px 312px; animation: lean 3.4s ease-in-out infinite; }
+.carry .otter-arms { transform-origin: 120px 212px; animation: lean 3.4s ease-in-out infinite; }
+.carry .specs { transform-origin: 116px 132px; transform: rotate(-7deg) translateY(3px); }
+.carry .sweat { animation: sweat 3.4s ease-in infinite; }
+.carry .book { cursor: pointer; text-decoration: none; }
+.carry .book g { transition: translate 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4); }
+.carry .book:hover g, .carry .book:focus-visible g { translate: 14px 0; }
+.carry .book:focus-visible { outline: none; }
+.carry .book:focus-visible rect { stroke-width: 5; }
+.carry .b2 g { transition-delay: 0s; }
+@keyframes totter {
+  0%, 100% { transform: rotate(-3.5deg); }
+  45% { transform: rotate(4deg); }
+  60% { transform: rotate(2.5deg); }
+  75% { transform: rotate(4.5deg); }
+}
+@keyframes lean {
+  0%, 100% { transform: rotate(1.6deg); }
+  45% { transform: rotate(-2deg); }
+  75% { transform: rotate(-2.4deg); }
+}
+@keyframes sweat { 0%, 55% { opacity: 0; transform: translateY(-4px); } 65% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
+
+@media (max-width: 760px), (orientation: portrait) {
+  .kick-wrap { margin: 3.5rem auto 0; }
+  .kick-wrap .kick { margin: 0.6rem 0 0; }
+  .frog-say { left: 60%; max-width: 9rem; font-size: 0.84rem; }
+  .paw { right: 14%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paw svg, .paw i, .frog svg, .frog .zzz path, .otter svg, .carry .stack, .carry .otter-body, .carry .otter-arms, .carry .sweat, .board .card.flip { animation: none !important; }
+  .frog[data-mood="asleep"] .zzz path { opacity: 1; }
 }

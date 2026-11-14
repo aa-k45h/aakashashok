@@ -242,7 +242,10 @@ export function createPond({ canvas, padEls, calm, onWake }) {
     group.rotation.y = def.turn;
     group.scale.set(def.r, 1, def.r);
     scene.add(group);
-    const pad = { ...def, group, top, home: new THREE.Vector3(), r: def.r, press: 0, hover: 0, phase: i * 1.9 };
+    // every pad floats at its own hair of height, so two that overlap never flicker
+    const baseY = 0.03 + i * 0.004;
+    top.position.y = baseY;
+    const pad = { ...def, group, top, baseY, home: new THREE.Vector3(), r: def.r, press: 0, hover: 0, phase: i * 1.9 };
     pads.push(pad);
     return pad;
   }
@@ -255,14 +258,48 @@ export function createPond({ canvas, padEls, calm, onWake }) {
   }, i));
   // loose pads, placed by hand so they do not line up
   [
-    { x: 46, y: 91, px: 8, py: 70, r: 0.5, turn: 1.3 },
+    { x: 46, y: 91, px: 95, py: 70, r: 0.42, turn: 1.3 },
     { x: 66, y: 22, px: 90, py: 64, r: 0.42, turn: 4.0 },
-    { x: 97, y: 30, px: 54, py: 72, r: 0.55, turn: 2.2 },
-    { x: 88, y: 93, px: 60, py: 94, r: 0.47, turn: 5.1 },
+    { x: 97, y: 30, px: 6, py: 66, r: 0.5, turn: 2.2 },
+    { x: 88, y: 93, px: 93, py: 97, r: 0.4, turn: 5.1 },
     { x: 61, y: 43, px: 12, py: 92, r: 0.3, turn: 0.2 },
     { x: 37, y: 71, px: 93, py: 90, r: 0.36, turn: 3.0 },
     { x: 84, y: 12, px: 91, py: 46, r: 0.33, turn: 1.9 }
   ].forEach((d, i) => addPad(d, i + 4));
+
+  // ---------- pebbles ----------
+  // Small heaps on the pond floor, and a few bigger stones that break the surface.
+  const pebbleSpots = [
+    { x: 5, y: 90, px: 6, py: 99, n: 7 },
+    { x: 52, y: 97, px: 60, py: 99, n: 5 },
+    { x: 98, y: 48, px: 97, py: 60, n: 6 },
+    { x: 33, y: 62, px: 50, py: 47, n: 4 },
+    { x: 70, y: 5, px: 96, py: 36, n: 5 },
+    { x: 86, y: 76, px: 60, py: 88, n: 4 },
+    { x: 24, y: 98, px: 97, py: 99, n: 5, rock: true },
+    { x: 64, y: 52, px: 6, py: 86, n: 3 }
+  ];
+  const pebbleGeo = new THREE.SphereGeometry(1, 12, 9);
+  const pebbleCols = [0xa9b4b3, 0xd3c2a4, 0x8496a0, 0xe6dcc8, 0x76897f, 0xbf9f86];
+  let seedN = 7;
+  const rand = () => { seedN = (seedN * 16807) % 2147483647; return seedN / 2147483647; };
+  for (const spot of pebbleSpots) {
+    spot.home = new THREE.Vector3();
+    spot.stones = [];
+    for (let i = 0; i < spot.n; i++) {
+      const big = spot.rock && i === 0;
+      const size = big ? 0.3 + rand() * 0.1 : 0.11 + rand() * 0.2;
+      const col = new THREE.Color(pebbleCols[Math.floor(rand() * pebbleCols.length)]);
+      if (!big) col.lerp(new THREE.Color(0x8ddcd2), 0.22);
+      const m = new THREE.Mesh(pebbleGeo, toon(col));
+      m.scale.set(size * (0.9 + rand() * 0.5), size * (big ? 0.62 : 0.45), size * (0.8 + rand() * 0.4));
+      m.rotation.y = rand() * 6.28;
+      const a = rand() * 6.28, d = big ? 0 : 0.25 + rand() * 0.75;
+      m.userData.off = new THREE.Vector3(Math.cos(a) * d, big ? -0.1 : -0.7 + size * 0.38, Math.sin(a) * d * 0.8);
+      scene.add(m);
+      spot.stones.push(m);
+    }
+  }
 
   // a lotus that sits on the pad for the section you are reading
   const lotus = new THREE.Group();
@@ -482,6 +519,10 @@ export function createPond({ canvas, padEls, calm, onWake }) {
       if (p.nav) p.r = compact ? 0.5 : portrait ? 0.92 : 1;
       if (!placed) p.group.position.copy(p.home);
     }
+    for (const spot of pebbleSpots) {
+      toWorld(((portrait ? spot.px : spot.x) / 100) * W, ((portrait ? spot.py : spot.y) / 100) * H, spot.home);
+      for (const m of spot.stones) m.position.copy(spot.home).add(m.userData.off);
+    }
     const s = toWorld(W * (portrait ? 0.2 : 0.1), -H * 0.06);
     uniforms.uSunPos.value.set(s.x, s.z);
     if (!placed) {
@@ -513,7 +554,7 @@ export function createPond({ canvas, padEls, calm, onWake }) {
       const sc = g.scale.x + (want - g.scale.x) * Math.min(1, dt * 8);
       g.scale.set(sc, 1, sc);
       g.rotation.y = p.turn + Math.sin(t * 0.17 + p.phase) * 0.05;
-      p.top.position.y = 0.03 - p.press * 0.05;
+      p.top.position.y = p.baseY - p.press * 0.05;
       if (p.nav) {
         toScreen(g.position, scr);
         tmp.set(g.position.x + sc, 0, g.position.z);
