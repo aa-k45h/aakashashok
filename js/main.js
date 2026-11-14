@@ -1,6 +1,7 @@
 // Navigation, input and the flat fallback pond. The 3D pond lives in pond.js and loads after first paint.
 
 import { initExtras, sfx } from './extras.js';
+import { initWeather } from './weather.js';
 
 const root = document.documentElement;
 const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -217,6 +218,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 initExtras({ getPond: () => pond, calm });
+const weather = initWeather({ getPond: () => pond, calm });
 
 // ---------- boot ----------
 function hasWebGL() {
@@ -246,6 +248,7 @@ function boot() {
     pond = p;
     pond.setCurrent(current);
     pond.setCompact(root.classList.contains('compact'));
+    pond.setNight(+getComputedStyle(root).getPropertyValue('--night') || 0);
     // in 3D the DOM duck is only a grab handle that tracks the real one
     const track = () => {
       if (pond !== p) return;

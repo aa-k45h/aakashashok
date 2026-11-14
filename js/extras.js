@@ -15,6 +15,13 @@ export function sfx(name) {
   audio.play(name);
 }
 
+// Rain sound. Several things can ask for it: the desk window and the actual rain.
+const rainWants = new Set();
+export function rainSound(key, on) {
+  if (on) rainWants.add(key); else rainWants.delete(key);
+  if (audio) audio.rain(soundOn && rainWants.size > 0);
+}
+
 // ---------- sitcom remote: original lines about a writer's life ----------
 const MAIN = [
   ['Brooklyn Nine-Nine', [
@@ -86,7 +93,10 @@ export function initExtras({ getPond, calm }) {
         audio = null;
       }
     }
-    if (audio) audio.setOn(soundOn);
+    if (audio) {
+      audio.setOn(soundOn);
+      audio.rain(soundOn && rainWants.size > 0);
+    }
   }
   soundBtn.addEventListener('click', () => setSound(!soundOn));
   // If sound was on last visit, it comes back with the first click anywhere. Never before a click.
@@ -124,14 +134,20 @@ export function initExtras({ getPond, calm }) {
     else tween((v) => pond.setDark(v), 0.35, 1.4);
   }
 
-  // ---------- remote ----------
+  // ---------- remote and TV ----------
+  // The TV answers the remote with a line, and a cat wanders onto the screen.
   const remote = $('.remote'), tv = $('#tv');
-  let lastLine = '';
+  const CATS = ['cat-sit', 'cat-loaf', 'cat-peek', 'cat-stretch'];
+  const FUR = ['#f7a23b', '#fff1c4', '#c9d6d4', '#f4b6a0'];
+  let lastLine = '', catI = 0;
   function showTv(show, line) {
     $('.tv-show', tv).textContent = show;
     $('.tv-line', tv).textContent = line;
-    tv.hidden = false;
-    tv.classList.remove('on');
+    catI = (catI + 1 + Math.floor(Math.random() * (CATS.length - 1))) % CATS.length;
+    const cat = $('.cat', tv);
+    $('use', cat).setAttribute('href', '#' + CATS[catI]);
+    cat.style.setProperty('--fur', FUR[Math.floor(Math.random() * FUR.length)]);
+    tv.classList.remove('idle', 'on');
     void tv.offsetWidth;
     tv.classList.add('on');
   }
@@ -147,10 +163,6 @@ export function initExtras({ getPond, calm }) {
       lastLine = line;
       showTv(show, line);
       sfx('click');
-    });
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') tv.hidden = true; });
-    window.addEventListener('click', (e) => {
-      if (!tv.hidden && !(e.target.closest && e.target.closest('.telly'))) tv.hidden = true;
     });
   }
 
@@ -176,9 +188,9 @@ export function initExtras({ getPond, calm }) {
       spot.classList.add('on');
       confession.textContent = spot.dataset.note;
       confession.classList.add('on');
-      if (spot.dataset.sound === 'rain' && audio) audio.rain(true);
+      if (spot.dataset.sound === 'rain') rainSound('desk', true);
     };
-    const leave = () => { if (spot.dataset.sound === 'rain' && audio) audio.rain(false); };
+    const leave = () => { if (spot.dataset.sound === 'rain') rainSound('desk', false); };
     spot.addEventListener('pointerenter', show);
     spot.addEventListener('focus', show);
     spot.addEventListener('click', show);
@@ -187,50 +199,52 @@ export function initExtras({ getPond, calm }) {
   });
 
   // ---------- penalty kick ----------
+  // The frog never moves. Its tongue does the goalkeeping.
   const box = $('.kick');
   if (box) {
-    const ballEl = $('.ball', box), frogEl = $('.frog', box), tongue = $('.tongue', box);
-    const START = { x: 50, y: 106 }, GOAL_Y = 32, POST_L = 20, POST_R = 80, R = 6.5, REACH = 12;
+    const ballEl = $('.ball', box), frogEl = $('.frog', box), tongue = $('.tongue', box), tip = $('.tip', box);
+    const START = { x: 50, y: 104 }, GOAL_Y = 32, POST_L = 20, POST_R = 80, R = 9.5;
+    const FROG = { x: 50, y: 48 }, MOUTH = { x: 50, y: 43 };
+    const ZONE = 66;        // the tongue goes once the ball is this close
+    const TOO_FAST = 165;   // anything quicker than this beats the tongue, unless it is hit straight at the frog
     const ball = { x: START.x, y: START.y, vx: 0, vy: 0, s: 1 };
-    const frog = { x: 50, y: 42, tx: 50 };
-    let held = false, state = 'live', raf = 0, last = 0, U = 1, sampleT = 0, lick = null, lastP = null;
+    let held = false, state = 'live', raf = 0, last = 0, U = 1, lick = null, tried = false, lastP = null;
 
     const measure = () => { U = box.clientWidth / 100; };
     function draw() {
-      ballEl.style.transform = `translate(${(ball.x * U).toFixed(1)}px, ${(ball.y * U).toFixed(1)}px) rotate(${(ball.x * 9 + ball.y * 6).toFixed(0)}deg) scale(${ball.s.toFixed(2)})`;
-      frogEl.style.transform = `translate(${(frog.x * U).toFixed(1)}px, ${(frog.y * U).toFixed(1)}px)`;
-      const mx = frog.x, my = frog.y - 0.5;
-      let ex = mx, ey = my;
-      if (lick) {
-        const k = Math.sin(Math.PI * Math.min(1, lick.t));
-        ex = mx + (lick.x - mx) * k; ey = my + (lick.y - my) * k;
-      }
-      tongue.setAttribute('d', `M${mx.toFixed(1)} ${my.toFixed(1)}L${ex.toFixed(1)} ${ey.toFixed(1)}`);
+      ballEl.style.transform = `translate(${(ball.x * U).toFixed(1)}px, ${(ball.y * U).toFixed(1)}px) rotate(${(ball.x * 7 + ball.y * 5).toFixed(0)}deg) scale(${ball.s.toFixed(2)})`;
+      frogEl.style.transform = `translate(${(FROG.x * U).toFixed(1)}px, ${(FROG.y * U).toFixed(1)}px)`;
+      let ex = MOUTH.x, ey = MOUTH.y;
+      if (lick) { ex += (lick.x - MOUTH.x) * lick.k; ey += (lick.y - MOUTH.y) * lick.k; }
+      tongue.setAttribute('d', `M${MOUTH.x} ${MOUTH.y}L${ex.toFixed(1)} ${ey.toFixed(1)}`);
+      tip.setAttribute('cx', ex.toFixed(1));
+      tip.setAttribute('cy', ey.toFixed(1));
+      tip.setAttribute('r', lick && lick.k > 0.05 ? '2.3' : '0');
     }
     function reset() {
       ball.x = START.x + (Math.random() * 16 - 8); ball.y = START.y; ball.vx = ball.vy = 0; ball.s = 1;
-      state = 'live';
+      state = 'live'; tried = false;
       box.classList.remove('scored');
       sfx('plop');
       run();
     }
-    function resolve(blocked) {
+    function goal() {
+      // the sun comes out
       held = false;
-      if (blocked || Math.abs(ball.x - frog.x) < REACH) {
-        // saved: the tongue gets there, the sky goes dark for a moment
-        state = 'saved';
-        lick = { x: ball.x, y: ball.y, t: 0 };
-        ball.vx = (Math.random() * 2 - 1) * 45; ball.vy = 105;
-        sky('dusk'); sfx('rumble');
-        setTimeout(() => { state = 'live'; sfx('plop'); }, 950);
-      } else {
-        // goal: the sun comes out
-        state = 'scored';
-        ball.vx = ball.vy = 0;
-        box.classList.add('scored');
-        sky('sun'); sfx('sun');
-        setTimeout(reset, 2100);
-      }
+      state = 'scored';
+      ball.vx = ball.vy = 0;
+      box.classList.add('scored');
+      sky('sun'); sfx('sun');
+      setTimeout(reset, 2100);
+    }
+    function stuck() {
+      // the tongue has the ball, the sky goes dark for a moment
+      held = false;
+      state = 'saved';
+      lick.stuck = true;
+      lick.x = ball.x; lick.y = ball.y;
+      ball.vx = ball.vy = 0;
+      sky('dusk'); sfx('rumble');
     }
     function step(now) {
       raf = 0;
@@ -238,8 +252,8 @@ export function initExtras({ getPond, calm }) {
       last = now;
       if (state === 'scored') {
         ball.y += (22 - ball.y) * Math.min(1, dt * 9);
-        ball.s += (0.78 - ball.s) * Math.min(1, dt * 9);
-      } else if (!held) {
+        ball.s += (0.74 - ball.s) * Math.min(1, dt * 9);
+      } else if (!held && !(lick && lick.stuck && !lick.let)) {
         ball.x += ball.vx * dt; ball.y += ball.vy * dt;
         const f = Math.exp(-1.5 * dt);
         ball.vx *= f; ball.vy *= f;
@@ -247,24 +261,51 @@ export function initExtras({ getPond, calm }) {
         if (ball.x > 100 - R) { ball.x = 100 - R; ball.vx = -Math.abs(ball.vx) * 0.6; }
         if (ball.y > 125 - R) { ball.y = 125 - R; ball.vy = -Math.abs(ball.vy) * 0.6; }
       }
-      const inPosts = ball.x > POST_L + 2 && ball.x < POST_R - 2;
-      // a ball hit straight at the frog never gets as far as the line
-      if (state === 'live' && ball.y < frog.y + 7 && ball.y >= GOAL_Y && Math.abs(ball.x - frog.x) < REACH * 0.7) resolve(true);
-      if (state !== 'scored' && ball.y < GOAL_Y) {
-        if (state === 'live' && inPosts) resolve();
-        else if (!inPosts || state === 'saved') { ball.y = GOAL_Y; ball.vy = Math.abs(ball.vy) * 0.6; }
+      if (ball.y > 78) tried = false;
+
+      // the frog decides once per attempt
+      if (state === 'live' && !lick && !tried && ball.y < ZONE) {
+        tried = true;
+        const speed = Math.hypot(ball.vx, ball.vy);
+        lick = { t: 0, k: 0, x: ball.x, y: ball.y, caught: speed < TOO_FAST || Math.abs(ball.x - FROG.x) < 10 };
       }
-      // the frog watches the ball, a beat behind
-      sampleT -= dt;
-      if (sampleT <= 0) {
-        sampleT = 0.14;
-        frog.tx = state === 'live' && ball.y < 90 ? Math.max(27, Math.min(73, ball.x)) : 50;
+      if (lick) {
+        lick.t += dt;
+        const OUT = 0.13;
+        if (lick.caught && !lick.stuck) { lick.x = ball.x; lick.y = ball.y; }
+        if (lick.t < OUT) lick.k = lick.t / OUT;
+        else if (lick.caught) {
+          if (!lick.stuck) stuck();
+          const h = (lick.t - OUT) / 0.26;
+          if (h < 1) {
+            // reel it in a little, ball stuck to the tip
+            lick.k = 1 - 0.3 * h;
+            ball.x = MOUTH.x + (lick.x - MOUTH.x) * lick.k;
+            ball.y = MOUTH.y + (lick.y - MOUTH.y) * lick.k;
+          } else {
+            if (!lick.let) {
+              lick.let = true;
+              ball.vx = (Math.random() * 2 - 1) * 50; ball.vy = 115;
+              setTimeout(() => { state = 'live'; sfx('plop'); }, 800);
+            }
+            lick.k = Math.max(0, 0.7 - (h - 1) * 1.6);
+            if (lick.k <= 0) lick = null;
+          }
+        } else {
+          lick.k = Math.max(0, 1 - (lick.t - OUT) / 0.22);
+          if (lick.k <= 0) lick = null;
+        }
+        // a ball that reaches the line before the tongue does is still caught if the frog had it read
+        if (lick && lick.caught && !lick.stuck && ball.y < GOAL_Y + 5) stuck();
       }
-      const d = frog.tx - frog.x;
-      frog.x += Math.sign(d) * Math.min(Math.abs(d), 52 * dt);
-      if (lick) { lick.t += dt / 0.3; if (lick.t >= 1) lick = null; }
+
+      const inPosts = ball.x > POST_L + 4 && ball.x < POST_R - 4;
+      if (state !== 'scored' && ball.y < GOAL_Y && !(lick && lick.stuck && !lick.let)) {
+        if (state === 'live' && inPosts) goal();
+        else { ball.y = GOAL_Y; ball.vy = Math.abs(ball.vy) * 0.6; }
+      }
       draw();
-      const moving = held || state !== 'live' || lick || Math.hypot(ball.vx, ball.vy) > 1.5 || Math.abs(d) > 0.4;
+      const moving = held || state !== 'live' || lick || Math.hypot(ball.vx, ball.vy) > 1.5;
       if (moving) raf = requestAnimationFrame(step);
     }
     function run() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(step); } }
@@ -287,7 +328,7 @@ export function initExtras({ getPond, calm }) {
       if (!held) return;
       const p = point(e);
       const dt = Math.max(0.008, (p.t - lastP.t) / 1000);
-      const nx = Math.max(R, Math.min(100 - R, p.x)), ny = Math.max(8, Math.min(125 - R, p.y));
+      const nx = Math.max(R, Math.min(100 - R, p.x)), ny = Math.max(10, Math.min(125 - R, p.y));
       ball.vx = ball.vx * 0.5 + ((nx - ball.x) / dt) * 0.5;
       ball.vy = ball.vy * 0.5 + ((ny - ball.y) / dt) * 0.5;
       ball.x = nx; ball.y = ny;
@@ -297,7 +338,7 @@ export function initExtras({ getPond, calm }) {
       if (!held) return;
       held = false;
       const sp = Math.hypot(ball.vx, ball.vy);
-      if (sp > 280) { ball.vx *= 280 / sp; ball.vy *= 280 / sp; }
+      if (sp > 300) { ball.vx *= 300 / sp; ball.vy *= 300 / sp; }
       if (performance.now() - lastP.t > 90) ball.vx = ball.vy = 0;
     };
     ballEl.addEventListener('pointerup', release);
@@ -305,7 +346,7 @@ export function initExtras({ getPond, calm }) {
     ballEl.addEventListener('keydown', (e) => {
       if (state !== 'live' || held) return;
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        ball.x = Math.max(23, Math.min(77, ball.x + (e.key === 'ArrowLeft' ? -6 : 6)));
+        ball.x = Math.max(26, Math.min(74, ball.x + (e.key === 'ArrowLeft' ? -6 : 6)));
         ball.vx = ball.vy = 0;
       } else if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowUp') {
         ball.vx = 0; ball.vy = -270;

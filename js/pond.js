@@ -29,6 +29,7 @@ precision highp float;
 varying vec2 vW;
 uniform float uTime;
 uniform float uDark;
+uniform float uNight;
 uniform vec2 uSunPos;
 ${NOISE}
 void main(){
@@ -48,6 +49,12 @@ void main(){
   col = mix(col, vec3(0.27, 0.66, 0.66), stone * 0.5);
   float sd = length((p - uSunPos) * vec2(1.0, 0.8));
   col = mix(col, vec3(1.0, 0.975, 0.84), smoothstep(13.0, 1.0, sd) * 0.55);
+  // night: deep water, a little moonlight where the sun was
+  vec3 ncol = mix(vec3(0.07, 0.215, 0.3), vec3(0.03, 0.105, 0.19), smoothstep(0.32, 0.68, n));
+  ncol += ca * 0.035;
+  ncol = mix(ncol, vec3(0.03, 0.12, 0.17), stone * 0.5);
+  ncol = mix(ncol, vec3(0.5, 0.64, 0.82), smoothstep(13.0, 1.0, sd) * 0.3);
+  col = mix(col, ncol, uNight);
   col *= 1.0 - uDark * 0.45;
   gl_FragColor = vec4(col, 1.0);
 }`;
@@ -59,6 +66,7 @@ varying vec2 vW;
 uniform float uTime;
 uniform float uSun;
 uniform float uDark;
+uniform float uNight;
 uniform vec2 uSunPos;
 uniform vec4 uRip[16];
 ${NOISE}
@@ -106,12 +114,13 @@ void main(){
   float star = smoothstep(0.035, 0.0, abs(dd.x)) * smoothstep(0.2, 0.0, abs(dd.y))
              + smoothstep(0.05, 0.0, abs(dd.y)) * smoothstep(0.16, 0.0, abs(dd.x))
              + smoothstep(0.07, 0.0, length(dd));
-  float sp = star * tw * step(0.74 - glare * 0.3 - uSun * 0.3, h);
+  float sp = star * tw * step(0.74 - glare * 0.3 - uSun * 0.3 - uNight * 0.1, h);
 
-  float white = cloud * 0.42 + cloudCore * 0.2 + line * 0.5 + sp + rings * 0.85;
-  float warm = glare * (0.42 + uSun * 0.5);
+  // at night the clouds fade and the sparkles read as stars
+  float white = (cloud * 0.42 + cloudCore * 0.2) * (1.0 - uNight * 0.8) + line * (0.5 - uNight * 0.25) + sp + rings * (0.85 - uNight * 0.3);
+  float warm = glare * (0.42 + uSun * 0.5) * (1.0 - uNight * 0.45);
   float alpha = clamp(white + warm, 0.0, 1.0);
-  vec3 col = mix(vec3(1.0), vec3(1.0, 0.965, 0.8), warm / max(white + warm, 0.001));
+  vec3 col = mix(mix(vec3(1.0), vec3(0.85, 0.93, 1.0), uNight), mix(vec3(1.0, 0.965, 0.8), vec3(0.78, 0.87, 1.0), uNight * (1.0 - uSun)), warm / max(white + warm, 0.001));
   col *= 1.0 - uDark * 0.35;
   gl_FragColor = vec4(col, alpha * (1.0 - uDark * 0.4));
 }`;
@@ -167,7 +176,8 @@ export function createPond({ canvas, padEls, calm, onWake }) {
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
   const camDir = new THREE.Vector3(0, 11, 6.5).normalize();
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x8fd8cf, 1.9));
+  const skyLight = new THREE.HemisphereLight(0xffffff, 0x8fd8cf, 1.9);
+  scene.add(skyLight);
   const sunLight = new THREE.DirectionalLight(0xfff3c4, 1.6);
   sunLight.position.set(-6, 10, 2);
   scene.add(sunLight);
@@ -176,6 +186,7 @@ export function createPond({ canvas, padEls, calm, onWake }) {
     uTime: { value: 0 },
     uSun: { value: 0 },
     uDark: { value: 0 },
+    uNight: { value: 0 },
     uSunPos: { value: new THREE.Vector2(-8, -9) },
     uRip: { value: Array.from({ length: 16 }, () => new THREE.Vector4(0, 0, -99, 0)) }
   };
@@ -299,10 +310,39 @@ export function createPond({ canvas, padEls, calm, onWake }) {
     scene.add(finL, finR);
     kois.push({ ...spec, segs, tail, finL, finR, size: spec.size || 1 });
   }
-  addKoi({ seed: 1, a: 0xfffaf0, b: 0xf26a3d, patch: 1.7, cut: 0.1, cx: 2, cz: 0.5, A: 11, B: 4.2, w: 0.085, ph: 0.4, depth: -0.34 }, 0);
-  addKoi({ seed: 2, a: 0xf7a23b, b: 0xfffaf0, patch: 2.6, cut: 0.55, cx: -3, cz: 2.5, A: 13, B: 5, w: 0.062, ph: 2.9, depth: -0.42, size: 1.15 }, 1);
-  addKoi({ seed: 3, a: 0xfffaf0, b: 0x24343a, patch: 2.1, cut: 0.35, cx: 5, cz: -2, A: 9, B: 6, w: 0.074, ph: 4.4, depth: -0.3, size: 0.85 }, 2);
-  addKoi({ seed: 4, a: 0xf26a3d, b: 0xfffaf0, patch: 3.3, cut: 0.6, cx: 0, cz: 4, A: 15, B: 3.4, w: 0.05, ph: 1.3, depth: -0.46 }, 3);
+  addKoi({ seed: 1, a: 0xfffaf0, b: 0xf26a3d, patch: 1.7, cut: 0.1, cx: 2, cz: 0.5, A: 11, B: 4.2, w: 0.085, ph: 0.4, depth: -0.34, glow: 0xff8a4a }, 0);
+  addKoi({ seed: 2, a: 0xf7a23b, b: 0xfffaf0, patch: 2.6, cut: 0.55, cx: -3, cz: 2.5, A: 13, B: 5, w: 0.062, ph: 2.9, depth: -0.42, size: 1.15, glow: 0xffc24a }, 1);
+  addKoi({ seed: 3, a: 0xfffaf0, b: 0x24343a, patch: 2.1, cut: 0.35, cx: 5, cz: -2, A: 9, B: 6, w: 0.074, ph: 4.4, depth: -0.3, size: 0.85, glow: 0x7fe9ff }, 2);
+  addKoi({ seed: 4, a: 0xf26a3d, b: 0xfffaf0, patch: 3.3, cut: 0.6, cx: 0, cz: 4, A: 15, B: 3.4, w: 0.05, ph: 1.3, depth: -0.46, glow: 0xff6f8f }, 3);
+
+  // after dark the koi glow: soft additive halos that ride along the body
+  const glowTex = (() => {
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const x = c.getContext('2d');
+    const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.25, 'rgba(255,255,255,0.55)');
+    g.addColorStop(0.6, 'rgba(255,255,255,0.14)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    x.fillStyle = g;
+    x.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(c);
+  })();
+  for (const k of kois) {
+    k.base = k.segs.map((m) => m.material.color.clone());
+    k.finBase = k.tail.material.color.clone();
+    k.halos = [1, 3, 5].map((i) => {
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: glowTex, color: k.glow, transparent: true, opacity: 0, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending
+      }));
+      sp.renderOrder = 1;
+      sp.userData.seg = i;
+      scene.add(sp);
+      return sp;
+    });
+  }
+  const lit = new THREE.Color(), lit2 = new THREE.Color();
 
   const kp = new THREE.Vector3(), kq = new THREE.Vector3();
   function koiAt(k, t, out) {
@@ -411,6 +451,7 @@ export function createPond({ canvas, padEls, calm, onWake }) {
 
   let placed = false;
   let compact = false;
+  let lastNight = -1, raining = false, rainT = 0;
   function layout() {
     W = window.innerWidth; H = window.innerHeight;
     const aspect = W / H;
@@ -488,7 +529,42 @@ export function createPond({ canvas, padEls, calm, onWake }) {
       lotus.rotation.y = t * 0.05;
     }
 
-    for (const k of kois) updateKoi(k, t * 1.0 + 40);
+    const night = uniforms.uNight.value;
+    for (const k of kois) {
+      updateKoi(k, t * 1.0 + 40);
+      const pulse = 0.82 + Math.sin(t * 1.6 + k.seed * 2.1) * 0.18;
+      k.segs.forEach((m, i) => {
+        // brighter, cleaner color in the dark, as if lit from inside
+        lit.copy(k.base[i]).multiplyScalar(1 + night * 0.5).lerp(lit2.set(k.glow), night * 0.18);
+        m.material.color.copy(lit);
+      });
+      k.tail.material.color.copy(k.finBase).lerp(lit.set(k.glow), night * 0.5);
+      k.halos.forEach((sp, j) => {
+        const seg = k.segs[sp.userData.seg];
+        sp.position.copy(seg.position);
+        const sc = (j === 0 ? 2.5 : 2.0 - j * 0.3) * k.size * (0.9 + pulse * 0.25);
+        sp.scale.set(sc, sc, 1);
+        sp.material.opacity = night * (j === 0 ? 0.6 : 0.42) * pulse;
+        sp.visible = night > 0.02;
+      });
+    }
+    if (night !== lastNight) {
+      lastNight = night;
+      skyLight.intensity = 1.9 - night * 0.95;
+      sunLight.intensity = 1.6 - night * 1.1;
+      sunLight.color.setRGB(1 - night * 0.3, 0.95 - night * 0.12, 0.77 + night * 0.23);
+      for (const p of pads) p.top.material.color.setRGB(1 - night * 0.5, 1 - night * 0.36, 1 - night * 0.26);
+      renderer.setClearColor(lit.setRGB(0.66 - night * 0.6, 0.91 - night * 0.76, 0.86 - night * 0.6));
+    }
+    // rain dimples the pond
+    if (raining) {
+      rainT -= dt;
+      if (rainT <= 0) {
+        rainT = 0.2 + Math.random() * 0.22;
+        toWorld(Math.random() * W, Math.random() * H, tmp);
+        rippleAt(tmp.x, tmp.z, 0.22 + Math.random() * 0.3);
+      }
+    }
 
     // duck steering: head for the target, ease off near it
     tmp.subVectors(d.target, d.pos); tmp.y = 0;
@@ -602,6 +678,9 @@ export function createPond({ canvas, padEls, calm, onWake }) {
     },
     // sun burst after a goal and dark sky after a save, both 0 to 1
     setSun(v) { uniforms.uSun.value = v; },
+    // 0 is day, 1 is night
+    setNight(v) { uniforms.uNight.value = v; },
+    setRain(on) { raining = on; },
     setDark(v) { uniforms.uDark.value = v; }
   };
   return api;
