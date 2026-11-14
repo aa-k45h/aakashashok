@@ -25,7 +25,8 @@ export function initWeather({ getPond, calm }) {
   const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
   function readNight() {
     const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    const n = smooth(0.4, 0.66, window.scrollY / max);
+    // day until the Writing section, a long twilight, full night by Contact
+    const n = smooth(0.2, 0.9, window.scrollY / max);
     if (Math.abs(n - night) < 0.004 && n !== 0 && n !== 1) return;
     night = n;
     root.style.setProperty('--night', n.toFixed(3));
@@ -115,52 +116,82 @@ export function initWeather({ getPond, calm }) {
   }
 
   // ---------- drops on the glass ----------
-  let dropT = 0, drops = 0;
-  const MAX_DROPS = calm ? 6 : small ? 10 : 20;
+  // Most are fine spray. A few are fat enough to blur what is behind them, and the fattest run down.
+  let dropT = 0, big = 0, beads = 0;
+  const MAX_BIG = calm ? 5 : small ? 9 : 18;
+  const MAX_BEADS = calm ? 10 : small ? 30 : 70;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  // no two drops are the same shape, and none is a clean oval
+  const lumpy = () => `${rnd(36, 64).toFixed(0)}% ${rnd(36, 64).toFixed(0)}% ${rnd(40, 60).toFixed(0)}% ${rnd(40, 60).toFixed(0)}% / ${rnd(44, 66).toFixed(0)}% ${rnd(44, 66).toFixed(0)}% ${rnd(34, 56).toFixed(0)}% ${rnd(34, 56).toFixed(0)}%`;
+
+  function bead(x, y, w, life) {
+    if (beads >= MAX_BEADS) return;
+    const el = document.createElement('span');
+    el.className = 'drop bead';
+    el.style.cssText = `left:${x};top:${y};width:${w.toFixed(1)}px;height:${(w * rnd(1, 1.25)).toFixed(1)}px;border-radius:${lumpy()}`;
+    glass.appendChild(el);
+    beads++;
+    el.animate([{ opacity: 0, transform: 'scale(0.4)' }, { opacity: 1, transform: 'scale(1)', offset: 0.06 }, { opacity: 1, offset: 0.8 }, { opacity: 0 }],
+      { duration: life, fill: 'forwards' }).onfinish = () => { el.remove(); beads--; };
+  }
+
   function addDrop() {
-    if (drops >= MAX_DROPS) return;
+    // spray lands all the time
+    for (let i = 0; i < (small ? 1 : 2); i++) bead(rnd(0, 100).toFixed(1) + '%', rnd(0, 96).toFixed(1) + '%', rnd(2, 6.5), rnd(2500, 8000));
+    if (big >= MAX_BIG || Math.random() < 0.45) return;
     const el = document.createElement('span');
     el.className = 'drop';
-    const w = 9 + Math.pow(Math.random(), 2) * 34;
-    el.style.width = w.toFixed(0) + 'px';
-    el.style.height = (w * (1.1 + Math.random() * 0.25)).toFixed(0) + 'px';
-    const x = Math.random() * 100, y = Math.random() * 92;
-    el.style.left = x.toFixed(1) + '%';
-    el.style.top = y.toFixed(1) + '%';
+    const w = 11 + Math.pow(Math.random(), 1.7) * 36;
+    const h = w * rnd(1.02, 1.38);
+    const x = rnd(0, 100), y = rnd(0, 90);
+    el.style.cssText = `left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;width:${w.toFixed(0)}px;height:${h.toFixed(0)}px;border-radius:${lumpy()};rotate:${rnd(-14, 14).toFixed(0)}deg`;
     glass.appendChild(el);
-    drops++;
-    const done = () => { el.remove(); drops--; };
-    const runs = !calm && w > 20 && Math.random() < 0.55;
-    const sit = 1500 + Math.random() * 4500;
-    el.animate([{ transform: 'scale(0.3)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 220, easing: 'ease-out' });
+    big++;
+    // a smaller drop fused to its side, as two drops that touched
+    if (w > 22 && Math.random() < 0.4) {
+      const kid = document.createElement('span');
+      kid.className = 'drop';
+      const kw = w * rnd(0.35, 0.55);
+      kid.style.cssText = `left:${rnd(55, 80).toFixed(0)}%;top:${rnd(45, 75).toFixed(0)}%;width:${kw.toFixed(0)}px;height:${(kw * 1.15).toFixed(0)}px;border-radius:${lumpy()}`;
+      el.appendChild(kid);
+    }
+    const done = () => { el.remove(); big--; };
+    const runs = !calm && w > 21 && Math.random() < 0.6;
+    const sit = rnd(1200, 5200);
+    el.animate([{ transform: 'scale(0.2)', opacity: 0 }, { transform: 'scale(1.08)', opacity: 1, offset: 0.7 }, { transform: 'scale(1)', opacity: 1 }], { duration: 260, easing: 'ease-out' });
     if (!runs) {
-      el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, delay: sit, fill: 'forwards' }).onfinish = done;
+      el.animate([{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(0.7)' }], { duration: 1400, delay: sit, fill: 'forwards' }).onfinish = done;
       return;
     }
-    // a heavy drop gives way and runs down, wobbling, leaving a wet trail
-    const fall = (30 + Math.random() * 45) * (H / 100);
-    const wob = (Math.random() - 0.5) * 22;
-    const dur = 1100 + Math.random() * 1300;
+    // a heavy drop gives way: it hesitates, runs, stalls, runs again, and leaves a wet track with beads in it
+    const fall = rnd(28, 70) * (H / 100);
+    const wob = rnd(-16, 16);
+    const dur = rnd(1300, 2600);
     const trail = document.createElement('span');
     trail.className = 'drop trail';
-    trail.style.left = `calc(${x.toFixed(1)}% + ${(w / 2 - 2.5).toFixed(0)}px)`;
-    trail.style.top = `calc(${y.toFixed(1)}% + ${(w / 2).toFixed(0)}px)`;
+    trail.style.left = `calc(${x.toFixed(1)}% + ${(w / 2 - 3).toFixed(0)}px)`;
+    trail.style.top = `calc(${y.toFixed(1)}% + ${(h / 2).toFixed(0)}px)`;
     trail.style.height = '0px';
     glass.appendChild(trail);
-    trail.animate([{ height: '0px', opacity: 0.9 }, { height: fall.toFixed(0) + 'px', opacity: 0.9, offset: 0.7 }, { height: fall.toFixed(0) + 'px', opacity: 0 }],
-      { duration: dur * 1.45, delay: sit, easing: 'ease-in', fill: 'forwards' }).onfinish = () => trail.remove();
+    trail.animate([{ height: '0px', opacity: 0.9 }, { height: (fall * 0.3).toFixed(0) + 'px', opacity: 0.9, offset: 0.3 }, { height: (fall * 0.36).toFixed(0) + 'px', opacity: 0.9, offset: 0.42 }, { height: fall.toFixed(0) + 'px', opacity: 0.85, offset: 0.7 }, { height: fall.toFixed(0) + 'px', opacity: 0 }],
+      { duration: dur * 1.5, delay: sit, fill: 'forwards' }).onfinish = () => trail.remove();
+    setTimeout(() => {
+      for (let i = 1; i <= 3; i++) bead(`calc(${x.toFixed(1)}% + ${(w / 2 - 2 + rnd(-2, 2)).toFixed(0)}px)`, `calc(${y.toFixed(1)}% + ${(h / 2 + fall * i * 0.24).toFixed(0)}px)`, rnd(2.5, 5), rnd(1800, 4000));
+    }, sit + dur * 0.6);
     el.animate([
-      { transform: 'translate(0, 0)' },
-      { transform: `translate(${(wob * 0.4).toFixed(0)}px, ${(fall * 0.25).toFixed(0)}px) scale(0.98, 1.08)`, offset: 0.4 },
-      { transform: `translate(${wob.toFixed(0)}px, ${fall.toFixed(0)}px) scale(0.85, 1.2)`, opacity: 1, offset: 0.92 },
-      { transform: `translate(${wob.toFixed(0)}px, ${(fall + 10).toFixed(0)}px) scale(0.6)`, opacity: 0 }
-    ], { duration: dur, delay: sit, easing: 'cubic-bezier(0.5, 0, 0.9, 0.6)', fill: 'forwards' }).onfinish = done;
+      { transform: 'translate(0, 0) scale(1)' },
+      { transform: `translate(${(wob * 0.3).toFixed(0)}px, ${(fall * 0.3).toFixed(0)}px) scale(0.96, 1.12)`, offset: 0.3 },
+      { transform: `translate(${(wob * 0.35).toFixed(0)}px, ${(fall * 0.36).toFixed(0)}px) scale(1.02, 1)`, offset: 0.42 },
+      { transform: `translate(${wob.toFixed(0)}px, ${fall.toFixed(0)}px) scale(0.82, 1.25)`, opacity: 1, offset: 0.93 },
+      { transform: `translate(${wob.toFixed(0)}px, ${(fall + 12).toFixed(0)}px) scale(0.5)`, opacity: 0 }
+    ], { duration: dur, delay: sit, fill: 'forwards' }).onfinish = done;
   }
 
   // ---------- loop: only runs while there is something in the air ----------
   function frame(now) {
     raf = 0;
-    const dt = Math.min(0.05, (now - last) / 1000);
+    const real = Math.min(1, (now - last) / 1000);
+    const dt = Math.min(0.05, real);
     last = now;
     const t = now / 1000;
     rainAmt += ((rainOn ? 1 : 0) - rainAmt) * Math.min(1, dt * 1.6);
@@ -168,8 +199,9 @@ export function initWeather({ getPond, calm }) {
     if (night > 0.02) drawFlies(dt, t);
     if (rainAmt > 0.01) {
       drawRain(dt);
-      dropT -= dt;
-      if (rainOn && dropT <= 0) { dropT = 0.18 + Math.random() * 0.4; addDrop(); }
+      dropT -= real;
+      // catch up if frames are slow, so the rain is as heavy on a weak phone as on a fast laptop
+      for (let i = 0; rainOn && dropT <= 0 && i < 10; i++) { dropT += 0.07 + Math.random() * 0.16; addDrop(); }
     }
     lastScroll = window.scrollY;
     if (!document.hidden && (night > 0.02 || rainAmt > 0.01 || rainOn)) raf = requestAnimationFrame(frame);

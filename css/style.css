@@ -198,8 +198,8 @@ main { position: relative; z-index: 2; pointer-events: none; }
 .hero-copy, .sheet { pointer-events: auto; }
 
 .hero {
-  min-height: 100vh;
-  min-height: 100svh;
+  min-height: 135vh;
+  min-height: 135svh;
   padding: 13vh 6vw 0 7vw;
 }
 .hero-copy { max-width: 44rem; }
@@ -240,7 +240,8 @@ h1 {
 .stop {
   min-height: 100vh;
   min-height: 100svh;
-  padding: 16vh 13vw 10vh 7vw;
+  /* long stretches of open water between sections, so day has time to turn into night */
+  padding: 16vh 13vw 62vh 7vw;
   display: flex;
   align-items: flex-start;
 }
@@ -436,7 +437,7 @@ h2 + h3 { margin-top: 0; }
   .hero { padding: 9vh 6vw 0; }
   h1 { white-space: normal; line-height: 0.95; padding-top: 0.2em; font-size: clamp(4.4rem, 24vw, 7rem); }
   .tagline { margin-top: 0.9rem; }
-  .stop { padding: 12vh 5vw 8vh; }
+  .stop { padding: 12vh 5vw 46vh; }
   .stop.split { display: block; }
   .sheet, #about .sheet, #contact .sheet { width: 100%; margin-left: 0; padding: 1.9rem 1.35rem 2rem; }
   .drift { margin-top: 3rem; }
@@ -604,7 +605,7 @@ button.prop svg { display: block; width: 100%; height: auto; transition: transfo
 
 /* Writing desk */
 .aside { min-width: 0; }
-.desk { position: relative; margin: 4.5rem 0 0 2%; width: min(25rem, 100%); pointer-events: auto; }
+.desk { position: relative; margin: 4.5rem 0 0 0; width: min(29rem, 100%); pointer-events: auto; }
 .desk svg { display: block; width: 100%; height: auto; }
 .desk .rain { animation: rain 0.7s linear infinite; }
 .desk .steam { animation: steam 3.4s ease-in-out infinite; }
@@ -782,23 +783,45 @@ button.prop svg { display: block; width: 100%; height: auto; transition: transfo
 #glass { position: fixed; inset: 0; z-index: 9; pointer-events: none; overflow: hidden; }
 .drop {
   position: absolute;
+  /* each drop gets its own lumpy outline from weather.js */
   border-radius: 48% 52% 50% 50% / 58% 58% 42% 42%;
-  -webkit-backdrop-filter: blur(3px) brightness(1.14) saturate(1.25);
-  backdrop-filter: blur(3px) brightness(1.14) saturate(1.25);
+  -webkit-backdrop-filter: blur(2.4px) brightness(1.05) contrast(1.22) saturate(1.5);
+  backdrop-filter: blur(2.4px) brightness(1.05) contrast(1.22) saturate(1.5);
+  /* clear glass: a dark rim where the light enters at the top, a thin bright rim at the bottom, one small hard glint */
   background:
-    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.7) 0 7%, rgba(255, 255, 255, 0) 24%),
-    radial-gradient(circle at 62% 82%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 55%);
-  box-shadow: inset 0 -2px 3px rgba(255, 255, 255, 0.4), inset 0 2px 3px rgba(4, 30, 44, 0.3), 0 1px 2px rgba(4, 30, 44, 0.28);
+    radial-gradient(ellipse 15% 9% at 31% 23%, rgba(255, 255, 255, 0.95) 0 55%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle at 68% 80%, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0) 22%),
+    radial-gradient(110% 70% at 50% 118%, rgba(255, 255, 255, 0.2) 0, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(120% 75% at 50% -18%, rgba(3, 26, 40, 0.34) 0, rgba(3, 26, 40, 0) 60%);
+  border: 0;
+  box-shadow:
+    inset 0 -1px 1.5px rgba(255, 255, 255, 0.6),
+    inset 0 2.5px 3px rgba(3, 26, 40, 0.34),
+    inset 2px 0 2.5px rgba(3, 26, 40, 0.16),
+    inset -2px 0 2.5px rgba(3, 26, 40, 0.1),
+    0 0 0 0.6px rgba(3, 26, 40, 0.22),
+    0 2.5px 3px rgba(3, 26, 40, 0.28);
   will-change: transform, opacity;
 }
+/* fine spray: too small to bend the light, just a glint and a shadow */
+.drop.bead {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 0;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.95) 0 18%, rgba(255, 255, 255, 0) 40%),
+    radial-gradient(circle at 50% 62%, rgba(225, 242, 250, 0.22), rgba(3, 26, 40, 0.26));
+  box-shadow: 0 1px 1.5px rgba(3, 26, 40, 0.35);
+}
 .drop.trail {
-  width: 5px !important;
-  border-radius: 3px;
+  width: 4px !important;
+  border: 0;
+  border-radius: 2px;
   box-shadow: none;
-  background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.22));
-  -webkit-backdrop-filter: blur(2px) brightness(1.1);
-  backdrop-filter: blur(2px) brightness(1.1);
-  transform-origin: 50% 100%;
+  /* a wet track: barely there, a little darker on one edge */
+  background: linear-gradient(90deg, rgba(3, 26, 40, 0.1), rgba(255, 255, 255, 0.07) 60%, rgba(255, 255, 255, 0));
+  -webkit-backdrop-filter: blur(1.4px) contrast(1.1);
+  backdrop-filter: blur(1.4px) contrast(1.1);
 }
 
 #rain {

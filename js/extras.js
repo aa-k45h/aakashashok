@@ -204,7 +204,7 @@ export function initExtras({ getPond, calm }) {
   if (box) {
     const ballEl = $('.ball', box), frogEl = $('.frog', box), tongue = $('.tongue', box), tip = $('.tip', box);
     const START = { x: 50, y: 104 }, GOAL_Y = 32, POST_L = 20, POST_R = 80, R = 9.5;
-    const FROG = { x: 50, y: 48 }, MOUTH = { x: 50, y: 43 };
+    const FROG = { x: 50, y: 48 }, MOUTH = { x: 50, y: 46 };
     const ZONE = 66;        // the tongue goes once the ball is this close
     const TOO_FAST = 165;   // anything quicker than this beats the tongue, unless it is hit straight at the frog
     const ball = { x: START.x, y: START.y, vx: 0, vy: 0, s: 1 };

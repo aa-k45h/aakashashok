@@ -55,6 +55,11 @@ void main(){
   ncol = mix(ncol, vec3(0.03, 0.12, 0.17), stone * 0.5);
   ncol = mix(ncol, vec3(0.5, 0.64, 0.82), smoothstep(13.0, 1.0, sd) * 0.3);
   col = mix(col, ncol, uNight);
+  // twilight sits between the two: peach near the low sun, lavender further out
+  float dusk = 4.0 * uNight * (1.0 - uNight);
+  vec3 tw = mix(vec3(0.56, 0.5, 0.74), vec3(1.0, 0.68, 0.5), smoothstep(17.0, 2.0, sd));
+  tw = mix(tw, tw * 0.8, smoothstep(0.32, 0.68, n)) + ca * 0.05;
+  col = mix(col, tw, dusk * 0.62);
   col *= 1.0 - uDark * 0.45;
   gl_FragColor = vec4(col, 1.0);
 }`;
@@ -121,6 +126,8 @@ void main(){
   float warm = glare * (0.42 + uSun * 0.5) * (1.0 - uNight * 0.45);
   float alpha = clamp(white + warm, 0.0, 1.0);
   vec3 col = mix(mix(vec3(1.0), vec3(0.85, 0.93, 1.0), uNight), mix(vec3(1.0, 0.965, 0.8), vec3(0.78, 0.87, 1.0), uNight * (1.0 - uSun)), warm / max(white + warm, 0.001));
+  float dusk = 4.0 * uNight * (1.0 - uNight);
+  col = mix(col, vec3(1.0, 0.8, 0.66), dusk * 0.6);
   col *= 1.0 - uDark * 0.35;
   gl_FragColor = vec4(col, alpha * (1.0 - uDark * 0.4));
 }`;

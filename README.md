@@ -49,14 +49,14 @@ Every path in the site is relative (`./css/...`, `./js/...`), so it works from a
 ## The interactive pieces
 
 - Sitcom remote and TV (hero): each click on the remote puts one random line on the TV, with a cartoon cat in the corner. The cats are drawn in `index.html`. The lines are original and live in `js/extras.js`, grouped by show.
-- Writing desk (Writing): hover, tap or tab to the window, notebook, headphones and mug. The four notes are drafts in Aakash's voice. Edit the `data-note` text in `index.html`, under the comment that starts "WRITING HABITS DESK".
+- Writing desk (Writing): hover, tap or tab to the window, journal, headphones and mug. The four notes are drafts in Aakash's voice. Edit the `data-note` text in `index.html`, under the comment that starts "WRITING HABITS DESK".
 - Prompt jar (About): click the jar and four slips float out.
-- Penalty kick (About): drag or flick the beach volleyball into the net. The frog sits still and its tongue stops slow shots and anything hit straight at it. Fast shots to the side go in. A goal brings the sun out, a save darkens the sky. With a keyboard, focus the ball, aim with the left and right arrows and press Space.
+- Penalty kick (About): drag or flick the beach volleyball into the net. The toy frog sits still and its tongue stops slow shots and anything hit straight at it. Fast shots to the side go in. A goal brings the sun out, a save darkens the sky. With a keyboard, focus the ball, aim with the left and right arrows and press Space.
 
 ## Night, fireflies and rain
 
-- Night comes on as you scroll down. The koi glow in the dark and fireflies drift over the page, with soft shadows under them.
-- Rain: the cloud lily pad in the bottom corner turns it on and off. One short shower also starts by itself the first time the Writing section comes into view. Drops land on the screen and blur what is behind them.
+- Night comes on slowly as you scroll down, through a peach and lavender twilight. There is open water between the sections to give it room. The koi glow in the dark and fireflies drift over the page, with soft shadows under them.
+- Rain: the cloud lily pad in the bottom corner turns it on and off. One short shower also starts by itself the first time the Writing section comes into view. Fine spray and fatter drops land on the screen. The fat ones blur what is behind them, and the heaviest run down.
 - With reduced motion set, there is no automatic shower and far fewer moving parts.
 - All of this lives in `js/weather.js` and the night part of `js/pond.js`.
 
