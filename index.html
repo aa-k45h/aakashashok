@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aakash Ashok, content writer</title>
+<meta name="description" content="Aakash Ashok writes for D2C shelves and B2B boardrooms. Strictly no em dashes.">
+<meta name="theme-color" content="#a9e8dc">
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="./assets/fonts/sacramento-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+<a class="skip" href="#writing">Skip the pond and go to the writing</a>
+
+<canvas id="pond" aria-hidden="true"></canvas>
+
+<nav class="jump" aria-label="Sections">
+  <a href="#intro" data-go="0">Intro</a>
+  <a href="#writing" data-go="1">Writing</a>
+  <a href="#about" data-go="2">About</a>
+  <a href="#contact" data-go="3">Contact</a>
+</nav>
+
+<!-- Lily pads. x and y are landscape positions, px and py are portrait ones, all in percent of the screen. -->
+<div class="pads" role="group" aria-label="Lily pads. Pick one and the duck swims there first.">
+  <button type="button" class="pad" data-go="0" style="--x:57;--y:63;--px:27;--py:58">Intro</button>
+  <button type="button" class="pad" data-go="1" style="--x:79;--y:37;--px:71;--py:53">Writing</button>
+  <button type="button" class="pad" data-go="2" style="--x:74;--y:82;--px:33;--py:81">About</button>
+  <button type="button" class="pad" data-go="3" style="--x:92;--y:61;--px:76;--py:79">Contact</button>
+</div>
+
+<div id="duck" aria-hidden="true">
+  <svg viewBox="0 0 64 56" width="64" height="56" focusable="false">
+    <ellipse cx="30" cy="38" rx="24" ry="15" fill="#ffd338" stroke="#0e3a40" stroke-width="2.5"/>
+    <path d="M8 34 Q2 24 10 22 Q12 30 18 32Z" fill="#ffd338" stroke="#0e3a40" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="42" cy="18" r="13" fill="#ffd338" stroke="#0e3a40" stroke-width="2.5"/>
+    <path d="M53 17 Q63 17 61 23 Q56 26 51 23Z" fill="#f26a3d" stroke="#0e3a40" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="45" cy="14" r="2.6" fill="#0e3a40"/>
+    <path d="M22 38 Q30 30 38 39" fill="none" stroke="#0e3a40" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
+</div>
+
+<main>
+  <section id="intro" class="hero" aria-labelledby="name">
+    <div class="hero-copy">
+      <h1 id="name" tabindex="-1">Aakash Ashok</h1>
+      <p class="tagline">Content Writer? I barely know 'er.</p>
+      <p class="pitch">Words for D2C shelves and B2B boardrooms. Strictly No em dashes.</p>
+    </div>
+  </section>
+
+  <section id="writing" class="stop" aria-labelledby="h-writing">
+    <div class="sheet">
+      <h2 id="h-writing" tabindex="-1">Writing</h2>
+      <p class="todo">[PLACEHOLDER: Medium highlights, the Codilar links, website copy and short-form samples. Stage 2.]</p>
+    </div>
+  </section>
+
+  <section id="about" class="stop" aria-labelledby="h-about">
+    <div class="sheet">
+      <h2 id="h-about" tabindex="-1">About</h2>
+      <p class="todo">[PLACEHOLDER: Arsenal, the CSE degree, sitcoms. Stage 2.]</p>
+    </div>
+  </section>
+
+  <section id="contact" class="stop" aria-labelledby="h-contact">
+    <div class="sheet">
+      <h2 id="h-contact" tabindex="-1">Contact</h2>
+      <p class="todo">[PLACEHOLDER: email, LinkedIn and Medium links. Stage 2.]</p>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>

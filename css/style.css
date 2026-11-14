@@ -1,0 +1,269 @@
+@font-face {
+  font-family: "Sacramento";
+  src: url("../assets/fonts/sacramento-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../assets/fonts/manrope-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --water: #a9e8dc;
+  --water-deep: #4fc4c1;
+  --glare: #fff8d6;
+  --ink: #0e3a40;
+  --pad: #6cc75f;
+  --pad-dark: #2f8f4e;
+  --duck: #ffd338;
+  --koi: #f26a3d;
+  --paper: #fffbe8;
+  --script: "Sacramento", "Snell Roundhand", "Segoe Script", cursive;
+  --text: "Manrope", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  letter-spacing: -0.006em;
+  -webkit-font-smoothing: antialiased;
+  /* Flat pond. This is what shows before the 3D pond loads, and all there is without WebGL. */
+  background:
+    radial-gradient(60vmax 44vmax at 8% -6%, var(--glare) 0, rgba(255, 248, 214, 0) 70%),
+    radial-gradient(50vmax 40vmax at 88% 108%, var(--water-deep) 0, rgba(79, 196, 193, 0) 72%),
+    var(--water);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+#pond {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.pond-on #pond { opacity: 1; }
+
+.skip {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: 10;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--ink);
+  border-radius: 0.5rem;
+}
+.skip:focus { top: 1rem; }
+
+/* Plain links. Same four stops as the lily pads. */
+.jump {
+  position: fixed;
+  top: 1.1rem;
+  right: 1.4rem;
+  z-index: 5;
+  display: flex;
+  gap: 1.15rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.jump a {
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+}
+.jump a:hover { border-bottom-color: var(--koi); }
+.jump a[aria-current="true"] { border-bottom-color: var(--ink); }
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 4px;
+}
+h1:focus-visible, h2:focus-visible { outline-style: dashed; outline-width: 2px; }
+
+/* Lily pads */
+.pads { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+.pad {
+  --d: clamp(6.2rem, 11.5vw, 10rem);
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  width: var(--d);
+  height: calc(var(--d) * 0.62);
+  margin: 0;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: pointer;
+  font: 700 1rem/1 var(--text);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  border: 2.5px solid var(--pad-dark);
+  border-radius: 50%;
+  background:
+    conic-gradient(from 20deg at 50% 50%, var(--water) 0 24deg, rgba(0, 0, 0, 0) 24deg),
+    radial-gradient(closest-side, #a8e372, var(--pad));
+  -webkit-tap-highlight-color: transparent;
+}
+.pad:nth-child(2) { rotate: -4deg; }
+.pad:nth-child(3) { rotate: 3deg; }
+.pad:nth-child(4) { rotate: -2deg; }
+.pad[aria-current="true"] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+@media (orientation: portrait) {
+  .pad {
+    --d: clamp(6.2rem, 31vw, 9rem);
+    left: calc(var(--px) * 1%);
+    top: calc(var(--py) * 1%);
+  }
+}
+
+/* With the 3D pond on, the buttons turn into clear hit areas over the real pads. */
+.pond-on .pad {
+  background: none;
+  border-color: transparent;
+  rotate: none;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* The duck. In the flat pond this is the duck itself. In the 3D pond it is a clear grab handle for touch. */
+#duck {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: 56px;
+  margin: -34px 0 0 -32px;
+  z-index: 3;
+  touch-action: none;
+  pointer-events: none;
+  will-change: transform;
+}
+#duck svg { display: block; }
+.pond-on #duck { width: 84px; height: 84px; margin: -52px 0 0 -42px; }
+.pond-on #duck svg { visibility: hidden; }
+@media (hover: none), (pointer: coarse) {
+  #duck { pointer-events: auto; cursor: grab; }
+}
+
+.flat-ripple {
+  position: fixed;
+  z-index: 0;
+  width: 10px;
+  height: 6px;
+  margin: -3px 0 0 -5px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: flat-ripple 1.6s ease-out forwards;
+}
+@keyframes flat-ripple {
+  to { transform: scale(14); opacity: 0; border-width: 0.3px; }
+}
+
+/* Page */
+main { position: relative; z-index: 2; pointer-events: none; }
+.hero-copy, .sheet { pointer-events: auto; }
+
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 13vh 6vw 0 7vw;
+}
+.hero-copy { max-width: 44rem; }
+
+h1 {
+  margin: 0 0 0 -0.02em;
+  font-family: var(--script);
+  font-weight: 400;
+  font-size: clamp(4.4rem, 11.5vw, 10.5rem);
+  line-height: 1.05;
+  letter-spacing: 0.012em;
+  white-space: nowrap;
+  /* a faint second stroke thickens the thin script, and the white copy is a slipped reflection */
+  -webkit-text-stroke: 0.012em currentColor;
+  text-shadow: 0.025em 0.035em 0 rgba(255, 255, 255, 0.7);
+}
+.tagline {
+  margin: 0.4rem 0 0 0.3rem;
+  font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.022em;
+}
+.pitch {
+  margin: 0.55rem 0 0 0.3rem;
+  max-width: 27rem;
+  font-size: clamp(1.02rem, 1.35vw, 1.15rem);
+}
+.stop {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 16vh 6vw 10vh 7vw;
+  display: flex;
+  align-items: flex-start;
+}
+.sheet {
+  width: min(34rem, 42vw);
+  padding: 2.4rem 2.5rem 2.8rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  /* Uneven corners so it reads as a torn-off page and not a card. */
+  border-radius: 1.6rem 0.5rem 1.9rem 0.7rem / 0.6rem 1.7rem 0.5rem 1.5rem;
+  box-shadow: 0.55rem 0.7rem 0 rgba(14, 58, 64, 0.16);
+  rotate: -0.7deg;
+}
+#about .sheet { rotate: 0.6deg; margin-left: 3vw; }
+#contact .sheet { rotate: -0.3deg; margin-left: 1vw; }
+
+h2 {
+  margin: 0 0 0.9rem;
+  font-family: var(--text);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 4.2vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+.todo {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border: 2px dashed var(--koi);
+  border-radius: 0.4rem;
+  font-size: 0.98rem;
+}
+
+@media (max-width: 760px), (orientation: portrait) {
+  .jump { right: 1rem; left: 1rem; justify-content: flex-end; gap: 1rem; font-size: 0.92rem; }
+  .hero { padding: 9vh 6vw 0; }
+  h1 { white-space: normal; line-height: 0.95; padding-top: 0.2em; font-size: clamp(4.4rem, 24vw, 7rem); }
+  .tagline { margin-top: 0.9rem; }
+  .stop { padding: 12vh 5vw 8vh; }
+  .sheet, #about .sheet, #contact .sheet { width: 100%; margin-left: 0; padding: 1.7rem 1.4rem 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  #pond { transition: none; }
+  .flat-ripple { animation-duration: 0.01s; }
+}
