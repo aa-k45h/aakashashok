@@ -158,7 +158,7 @@ function padTexture(seed) {
   return t;
 }
 
-export function createPond({ canvas, padEls, calm }) {
+export function createPond({ canvas, padEls, calm, onWake }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.setClearColor(0xa9e8dc);
@@ -239,11 +239,11 @@ export function createPond({ canvas, padEls, calm }) {
   [
     { x: 46, y: 91, px: 8, py: 70, r: 0.5, turn: 1.3 },
     { x: 66, y: 22, px: 90, py: 64, r: 0.42, turn: 4.0 },
-    { x: 97, y: 30, px: 55, py: 68, r: 0.62, turn: 2.2 },
+    { x: 97, y: 30, px: 54, py: 72, r: 0.55, turn: 2.2 },
     { x: 88, y: 93, px: 60, py: 94, r: 0.47, turn: 5.1 },
     { x: 61, y: 43, px: 12, py: 92, r: 0.3, turn: 0.2 },
     { x: 37, y: 71, px: 93, py: 90, r: 0.36, turn: 3.0 },
-    { x: 84, y: 12, px: 48, py: 45, r: 0.33, turn: 1.9 }
+    { x: 84, y: 12, px: 91, py: 46, r: 0.33, turn: 1.9 }
   ].forEach((d, i) => addPad(d, i + 4));
 
   // a lotus that sits on the pad for the section you are reading
@@ -516,6 +516,7 @@ export function createPond({ canvas, padEls, calm }) {
     if (speed > 0.9 && d.wake <= 0) {
       rippleAt(d.pos.x - Math.sin(d.heading) * 0.3, d.pos.z - Math.cos(d.heading) * 0.3, 0.3 + Math.min(0.25, speed * 0.05));
       d.wake = 0.34 + Math.sin(t * 7) * 0.08;
+      if (onWake) onWake();
     }
     if (d.mode === 'nav') {
       // wall-clock limit, so a slow device never leaves the visitor waiting on the duck
@@ -593,7 +594,13 @@ export function createPond({ canvas, padEls, calm }) {
       });
       return hit;
     },
-    // hooks for Stage 3 (penalty kick): sun burst and dark sky, both 0 to 1
+    // the duck jumps, with a splash
+    hop() {
+      d.hop = 1;
+      rippleAt(d.pos.x, d.pos.z, 1);
+      rippleAt(d.pos.x + 0.4, d.pos.z - 0.3, 0.6);
+    },
+    // sun burst after a goal and dark sky after a save, both 0 to 1
     setSun(v) { uniforms.uSun.value = v; },
     setDark(v) { uniforms.uDark.value = v; }
   };

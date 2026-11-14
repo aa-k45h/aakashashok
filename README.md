@@ -6,9 +6,8 @@ Static files only. There is no build step and no backend, and nothing tracks vis
 
 ## Status
 
-Stage 2 of 3: the pond, the duck, and all the sections with their content.
+All three stages are in: the pond and duck, the sections and their content, and the interactive pieces with sound.
 Two blocks in the Writing section are still marked `[PLACEHOLDER]`: website and landing page copy, and social and short-form. Aakash will supply those.
-Sound, the penalty kick, the remote, the prompt jar, the desk and the Easter eggs come in Stage 3.
 
 ## Run it locally
 
@@ -47,6 +46,27 @@ Every path in the site is relative (`./css/...`, `./js/...`), so it works from a
 - Reduced motion: the water slows down, cursor ripples stop and the page jumps without waiting for the duck.
 - No WebGL: a flat pond with the same pads and a small drawn duck takes over.
 
+## The interactive pieces
+
+- Sitcom remote (hero): each click shows one random line on a small TV screen. The lines are original and live in `js/extras.js`, grouped by show.
+- Writing desk (Writing): hover, tap or tab to the window, notebook, headphones and mug. The four notes are drafts in Aakash's voice. Edit the `data-note` text in `index.html`, under the comment that starts "WRITING HABITS DESK".
+- Prompt jar (About): click the jar and four slips float out.
+- Penalty kick (About): drag or flick the ball into the net. The frog saves anything it can reach. A goal brings the sun out, a save darkens the sky. With a keyboard, focus the ball, aim with the left and right arrows and press Space.
+
+## Sound
+
+Sound is off until the visitor clicks the lily pad speaker in the bottom corner. The choice is remembered in `localStorage`, and a remembered "on" still waits for the first click before anything plays. With reduced motion set, sound always starts muted and plays quieter. It pauses when the tab is hidden.
+
+Everything is synthesized in `js/audio.js` with the Web Audio API: the background pads and chimes, water, the sun swell, the rumble, the remote click, the jar clink and the rain. There are no audio files, so there is nothing to license.
+
+## Hidden bits (spoilers)
+
+- Click the paperclip on the Writing sheet.
+- Click the yellow umbrella on the About sheet.
+- Click the atom on the Contact sheet.
+- Type 99 anywhere.
+- Double-click the water.
+
 ## Files
 
 ```
@@ -54,6 +74,8 @@ index.html        page and all copy
 css/style.css     layout, type, the flat fallback pond
 js/main.js        navigation, input, fallback duck
 js/pond.js        the 3D pond (loaded after first paint)
+js/extras.js      remote, desk, jar, penalty kick, hidden bits, sound toggle
+js/audio.js       synthesized sound (loaded when sound is turned on)
 vendor/           Three.js r160
 assets/fonts/     Sacramento (the name) and Manrope (everything else)
 ```
@@ -67,3 +89,5 @@ To move a lily pad, edit its `--x` and `--y` (landscape), `--px` and `--py` (por
 - Manrope by Mikhail Sharanda, SIL Open Font License 1.1.
 
 Font files come from the Fontsource packages and are served from this repo. No audio files are used.
+
+The sitcom nods are colors, props and original lines only. There are no logos, screenshots, character images or copied dialogue.

@@ -1,5 +1,7 @@
 // Navigation, input and the flat fallback pond. The 3D pond lives in pond.js and loads after first paint.
 
+import { initExtras, sfx } from './extras.js';
+
 const root = document.documentElement;
 const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canvas = document.getElementById('pond');
@@ -169,7 +171,7 @@ document.querySelectorAll('.floater').forEach((li) => {
 });
 
 // ---------- input ----------
-const onWater = (t) => !(t.closest && t.closest('a, button, .sheet, .note, #duck'));
+const onWater = (t) => !(t.closest && t.closest('a, button, .sheet, .note, .kick, .desk, .telly, .jar-wrap, #duck'));
 
 window.addEventListener('pointermove', (e) => {
   if (pond && e.pointerType === 'mouse') pond.pointerMove(e.clientX, e.clientY);
@@ -179,6 +181,7 @@ window.addEventListener('click', (e) => {
   if (!pond || !onWater(e.target)) return;
   const touch = e.pointerType ? e.pointerType !== 'mouse' : window.matchMedia('(hover: none)').matches;
   pond.tap(e.clientX, e.clientY, touch);
+  sfx('ripple');
 });
 
 // Touch: drag the duck, drop it on a lily pad.
@@ -213,6 +216,8 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) pond.stop(); else pond.start();
 });
 
+initExtras({ getPond: () => pond, calm });
+
 // ---------- boot ----------
 function hasWebGL() {
   try {
@@ -237,7 +242,7 @@ padEls.forEach((el) => { el.dataset.spot = el.getAttribute('style'); });
 function boot() {
   if (!hasWebGL()) { useFlat(); return; }
   import('./pond.js').then(({ createPond }) => {
-    const p = createPond({ canvas, padEls, calm });
+    const p = createPond({ canvas, padEls, calm, onWake: () => sfx('paddle') });
     pond = p;
     pond.setCurrent(current);
     pond.setCompact(root.classList.contains('compact'));
