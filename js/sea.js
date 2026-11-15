@@ -808,7 +808,8 @@ export function createSea({ canvas, calm, onTv, onRemote, onDuck, onSplash }) {
     camX = portrait ? 2.5 : 0;
     wreck.position.set(portrait ? 7 : 10.5, SEABED_Y - 0.6, -3);
     // the remote hangs beside the TV on a wide screen and under it on a tall one
-    remote.position.set(portrait ? 0.55 : 2.0, portrait ? -1.85 : -1.55, 0.5);
+    // and on the left of it on a wide screen, clear of the depth gauge
+    remote.position.set(portrait ? 0.55 : -2.05, portrait ? -1.85 : -1.5, 0.5);
   }
 
   const shallow = new THREE.Color(0x56cfc4), mid = new THREE.Color(0x1f8a9c), deep = new THREE.Color(0x06293c), haze = new THREE.Color(0xf6dcc0);

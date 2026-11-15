@@ -1,6 +1,5 @@
 // Navigation, the dive, the TV, sound. The sea itself lives in sea.js and loads after first paint.
 import { MAIN, WILD } from './lines.js';
-import { initKick } from './kick.js';
 
 const root = document.documentElement;
 const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -76,7 +75,7 @@ function measureStops() {
     [writing.offsetTop - vh * 0.1, 18],
     [writing.offsetTop + writing.offsetHeight - vh * 1.1, 26],
     [mid(about, 0.35), 32],
-    [contact.offsetTop - vh * 0.15, 40],
+    [contact.offsetTop + contact.offsetHeight - vh * 1.25, 39.5],
     [max, 41.6]
   ].sort((a, b) => a[0] - b[0]);
 }
@@ -227,10 +226,8 @@ document.querySelectorAll('.floater').forEach((li) => {
   btn.addEventListener('click', () => { set(note.hidden); sfx('paper'); });
 });
 
-initKick({ calm, sfx, flash });
-
 // ---------- input ----------
-const onWater = (t) => !(t.closest && t.closest('a, button, .plate, .note, .kick-wrap'));
+const onWater = (t) => !(t.closest && t.closest('a, button, .paper, .note, .chest'));
 window.addEventListener('pointermove', (e) => {
   if (sea && e.pointerType === 'mouse') sea.pointerMove(e.clientX, e.clientY);
 }, { passive: true });
@@ -284,7 +281,7 @@ function boot() {
       onRemote: (r) => {
         remoteEl.classList.toggle('on', r.visible);
         if (!r.visible) return;
-        const s = Math.max(44, r.r * 2);
+        const s = Math.min(120, Math.max(44, r.r * 2));
         remoteEl.style.width = remoteEl.style.height = s.toFixed(0) + 'px';
         remoteEl.style.transform = `translate(${(r.x - s / 2).toFixed(1)}px, ${(r.y - s / 2).toFixed(1)}px)`;
       }

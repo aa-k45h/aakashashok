@@ -11,9 +11,10 @@ Static files only. There is no build step and no backend, and nothing tracks vis
 - In the water: sunbeams, drifting specks, bubbles, jellyfish, sea grass and two schools of fish that form a ball, a figure of eight, a spiral and a wave, one after the other.
 - The wreck: a wooden ship with a torn hull, ribs, masts, rags of sail, rigging, a cannon and a wheel, with barrels, crates, a propeller, a sea chest and an anchor around it.
 - The duck: a rubber duck that follows the cursor all the way down. On touch it swims to wherever you tap.
-- The TV: an old set tied into the anchor line at about 13 metres. Click the remote hanging beside it and the screen plays one original line in the spirit of a sitcom. Lines are in `js/lines.js`.
-- The content sits on riveted iron plates hung on chain. The Medium lines are in corked bottles: click one and the note unrolls. Contact is three brass tags.
-- The penalty kick (About): drag or flick the old leather football into the rusted goal. A seal patrols the goal mouth and noses away what it can reach. A hard flick to the far side beats it. With a keyboard, focus the ball, aim with the left and right arrows and press Space.
+- The TV: an old set tied into the anchor line at about 13 metres. Click the remote hanging to its left and the screen plays one original line in the spirit of a sitcom. Lines are in `js/lines.js`.
+- The content is on sheets of wet paper, each hung on a fish hook and line. The Medium lines are in corked bottles: click one and the note unrolls.
+- A cat hides behind the Writing sheet. Tiny fish swim past and its paw comes out to hook one.
+- Contact is a sea chest on the bottom. The three scrolls in it are labeled Email, LinkedIn and Medium, and each one is the link.
 
 Everything that hangs or drifts moves to one shared, slow current, so the page feels like one body of water.
 
@@ -50,7 +51,7 @@ Every path in the site is relative (`./css/...`, `./js/...`), so it works from a
 - Touch: scroll to descend. Tap the water and the duck swims over.
 - Keyboard: Tab to a link in the gauge and press Enter, or press 1, 2, 3 or 4.
 - Reduced motion: the dive is a quick cut, the water moves at half speed, and there are fewer fish, jellyfish and specks.
-- No WebGL: the 3D sea is replaced by a plain gradient from sky to deep water. All the content, the bottles and the penalty kick still work.
+- No WebGL: the 3D sea is replaced by a plain gradient from sky to deep water. All the content, the bottles and the chest still work.
 - Reloading part way down, or opening a link to a section, skips the boat and starts you under water.
 
 ## Sound
@@ -63,10 +64,9 @@ Everything is synthesized in `js/audio.js` with the Web Audio API: slow pads and
 
 ```
 index.html        page and all copy
-css/style.css     layout, type, plates, gauge
+css/style.css     layout, type, papers, gauge
 js/main.js        the dive, navigation, depth, TV, sound toggle
 js/sea.js         the 3D sea and wreck (loaded after first paint)
-js/kick.js        the penalty kick
 js/lines.js       the TV lines
 js/audio.js       synthesized sound (loaded when sound is turned on)
 vendor/           Three.js r160
