@@ -1,4 +1,5 @@
 // All sound is synthesized here with the Web Audio API. There are no audio files.
+// Above water it is clear. Below, a filter closes over everything.
 // Loaded only after the visitor turns sound on.
 
 const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
@@ -11,7 +12,13 @@ export function createAudio({ calm }) {
 
   const master = ctx.createGain();
   master.gain.value = 0;
-  master.connect(ctx.destination);
+  // everything passes through this filter, which closes when you go under
+  const under = ctx.createBiquadFilter();
+  under.type = 'lowpass';
+  under.frequency.value = 18000;
+  under.Q.value = 0.6;
+  master.connect(under);
+  under.connect(ctx.destination);
 
   // a soft echo that everything dreamy is sent through
   const echo = ctx.createDelay(1.5);
@@ -180,6 +187,20 @@ export function createAudio({ calm }) {
       hiss({ dur: 1.9, gain: 0.5, type: 'lowpass', from: 130, toF: 70, q: 0.7, attack: 0.35 });
       tone(52, { attack: 0.3, decay: 1.5, gain: 0.16, slide: 0.8 });
     },
+    // going through the surface
+    dive() {
+      hiss({ dur: 1.3, gain: 0.34, from: 2600, toF: 260, q: 0.5, attack: 0.02 });
+      tone(130, { decay: 0.9, gain: 0.26, slide: 0.35 });
+      for (let i = 0; i < 12; i++) tone(500 + Math.random() * 900, { attack: 0.01, decay: 0.12, gain: 0.05, slide: 1.6, at: 0.25 + Math.random() * 1.4 });
+    },
+    bubble() {
+      tone(420 + Math.random() * 500, { attack: 0.01, decay: 0.1, gain: 0.05, slide: 1.7 });
+    },
+    // the ball coming off the seal
+    thud() {
+      tone(110, { decay: 0.2, gain: 0.22, slide: 0.5 });
+      hiss({ dur: 0.12, gain: 0.06, from: 500, q: 1 });
+    },
     // remote button
     click() {
       tone(1900, { type: 'square', decay: 0.03, gain: 0.04 });
@@ -223,6 +244,10 @@ export function createAudio({ calm }) {
         if (rainGain) rain(false);
         sleepT = setTimeout(() => ctx.suspend(), 1400);
       }
+    },
+    // muffle everything once we are below the surface
+    setUnder(v) {
+      under.frequency.setTargetAtTime(v ? 1500 : 18000, ctx.currentTime, 0.35);
     },
     // pause while the tab is hidden
     setHidden(v) {

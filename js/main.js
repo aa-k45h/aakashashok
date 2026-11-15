@@ -1,86 +1,138 @@
-// Navigation, input and the flat fallback pond. The 3D pond lives in pond.js and loads after first paint.
-
-import { initExtras, sfx } from './extras.js';
-import { initWeather } from './weather.js';
+// Navigation, the dive, the TV, sound. The sea itself lives in sea.js and loads after first paint.
+import { MAIN, WILD } from './lines.js';
+import { initKick } from './kick.js';
 
 const root = document.documentElement;
 const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const canvas = document.getElementById('pond');
-const padEls = [...document.querySelectorAll('.pad')];
-const jumpEls = [...document.querySelectorAll('.jump a')];
+const $ = (q) => document.querySelector(q);
+const canvas = $('#sea');
+const navEls = [...document.querySelectorAll('.gauge a')];
 const sections = ['intro', 'writing', 'about', 'contact'].map((id) => document.getElementById(id));
-const duckEl = document.getElementById('duck');
+const depthEl = $('.depth'), depthText = $('.depth b');
+const flashEl = $('#flash');
+const tvEl = $('#tv'), remoteEl = $('#remote');
 
-const portrait = window.matchMedia('(orientation: portrait)');
-let pond = null; // whichever pond is running: 3D or flat
-let current = 0;
-let busy = false;
+let sea = null;
 
-// ---------- flat pond (no WebGL) ----------
-// Same moves as the 3D one, done with a small SVG duck and CSS ripples.
-function createFlatPond() {
-  const pos = { x: window.innerWidth * 0.42, y: window.innerHeight * 0.78 };
-  const target = { ...pos };
-  let mode = 'idle', navDone = null, navT = 0, facing = 1, raf = 0;
-  const center = (i) => {
-    const r = padEls[i].getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2, r: r.width / 2 };
-  };
-  function ripple(x, y) {
-    if (calm) return;
-    const el = document.createElement('span');
-    el.className = 'flat-ripple';
-    el.style.left = x + 'px';
-    el.style.top = y + 'px';
-    document.body.appendChild(el);
-    el.addEventListener('animationend', () => el.remove());
+// ---------- sound ----------
+let audio = null, soundOn = false, lastBub = 0;
+function sfx(name) {
+  if (!audio || !soundOn) return;
+  if (name === 'bubble') {
+    const now = performance.now();
+    if (now - lastBub < 180) return;
+    lastBub = now;
   }
-  let last = performance.now();
-  function frame(now) {
-    raf = requestAnimationFrame(frame);
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
-    const dx = target.x - pos.x, dy = target.y - pos.y;
-    const dist = Math.hypot(dx, dy);
-    const stop = mode === 'follow' ? 54 : 6;
-    if (dist > stop) {
-      const k = 1 - Math.exp(-dt * (mode === 'drag' ? 14 : 2.6));
-      pos.x += dx * k; pos.y += dy * k;
-      if (Math.abs(dx) > 4) facing = dx > 0 ? 1 : -1;
-    }
-    if (mode === 'nav') {
-      if (dist < 14 || now - navT > 2400) {
-        mode = 'idle';
-        const done = navDone; navDone = null;
-        ripple(pos.x, pos.y + 16);
-        if (done) done();
-      }
-    }
-    const bob = calm ? 0 : Math.sin(now / 420) * 2;
-    duckEl.style.transform = `translate(${pos.x.toFixed(1)}px, ${(pos.y + bob).toFixed(1)}px) scaleX(${facing})`;
-  }
-  return {
-    start() { last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); },
-    stop() { cancelAnimationFrame(raf); },
-    layout() {},
-    setCurrent() {}, setHover() {}, setCompact() {},
-    pointerMove(x, y) { if (mode !== 'nav' && mode !== 'drag') { target.x = x; target.y = y; mode = 'follow'; } },
-    tap(x, y, callDuck) { ripple(x, y); if (callDuck && mode !== 'nav' && mode !== 'drag') { target.x = x; target.y = y; mode = 'idle'; } },
-    goTo(i, done) {
-      if (navDone) { const old = navDone; navDone = null; old(false); }
-      const c = center(i);
-      target.x = c.x; target.y = c.y - 8; mode = 'nav'; navT = performance.now(); navDone = done;
-    },
-    dragStart() { mode = 'drag'; },
-    dragMove(x, y) { if (mode === 'drag') { target.x = x; target.y = y; } },
-    dragEnd() {
-      if (mode !== 'drag') return -1;
-      mode = 'idle';
-      ripple(target.x, target.y + 16);
-      return padEls.findIndex((_, i) => { const c = center(i); return Math.hypot(c.x - target.x, c.y - target.y) < c.r * 1.2; });
-    }
-  };
+  audio.play(name);
 }
+const soundBtn = $('#sound');
+async function setSound(on) {
+  soundOn = on;
+  soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  try { localStorage.setItem('pond-sound', on ? 'on' : 'off'); } catch (err) { /* private mode, fine */ }
+  if (on && !audio) {
+    try {
+      const mod = await import('./audio.js');
+      audio = mod.createAudio({ calm });
+    } catch (err) {
+      audio = null;
+    }
+  }
+  if (audio) {
+    audio.setOn(soundOn);
+    audio.setUnder(!root.classList.contains('surface'));
+  }
+}
+soundBtn.addEventListener('click', () => setSound(!soundOn));
+// If sound was on last visit, it comes back with the first click anywhere. Never before a click.
+// With reduced motion it always starts muted.
+let remembered = false;
+try { remembered = localStorage.getItem('pond-sound') === 'on'; } catch (err) { remembered = false; }
+if (remembered && !calm) {
+  const wake = (e) => {
+    window.removeEventListener('click', wake, true);
+    if (!soundOn && !(e.target.closest && e.target.closest('#sound'))) setSound(true);
+  };
+  window.addEventListener('click', wake, true);
+}
+
+function flash(kind) {
+  flashEl.className = '';
+  void flashEl.offsetWidth;
+  flashEl.className = kind;
+}
+
+// ---------- depth: where the camera sits for each scroll position ----------
+// Anchored to the page, so the TV is in view in the open water and the wreck is behind the right plates.
+let stops = [];
+function measureStops() {
+  const vh = window.innerHeight;
+  const mid = (el, f = 0.5) => el.offsetTop + el.offsetHeight * f - vh / 2;
+  const max = Math.max(1, document.documentElement.scrollHeight - vh);
+  const water = $('.open-water'), [, writing, about, contact] = sections;
+  stops = [
+    [0, 3],
+    [mid(water, 0.48), 13],
+    [writing.offsetTop - vh * 0.1, 18],
+    [writing.offsetTop + writing.offsetHeight - vh * 1.1, 26],
+    [mid(about, 0.35), 32],
+    [contact.offsetTop - vh * 0.15, 40],
+    [max, 41.6]
+  ].sort((a, b) => a[0] - b[0]);
+}
+function depthAt(y) {
+  if (y <= stops[0][0]) return stops[0][1];
+  for (let i = 1; i < stops.length; i++) {
+    if (y <= stops[i][0]) {
+      const [a, da] = stops[i - 1], [b, db] = stops[i];
+      const f = b > a ? (y - a) / (b - a) : 1;
+      return da + (db - da) * f;
+    }
+  }
+  return stops[stops.length - 1][1];
+}
+function onScroll() {
+  if (root.classList.contains('surface')) return;
+  const dpt = depthAt(window.scrollY);
+  if (sea) sea.setDepth(dpt);
+  else showDepth(dpt);
+}
+function showDepth(m) {
+  const under = !root.classList.contains('surface');
+  const shown = under ? Math.max(0, m) : 0;
+  depthText.textContent = Math.round(shown) + ' m';
+  depthEl.style.setProperty('--at', Math.min(1, shown / 41.6).toFixed(3));
+  // the interface turns pale once the water behind it is dark
+  root.classList.toggle('deep', under && shown > 15);
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+// ---------- the dive ----------
+let diving = false;
+function goUnder(then) {
+  root.classList.remove('surface');
+  root.classList.add('under');
+  if (audio) audio.setUnder(true);
+  measureStops();
+  onScroll();
+  if (then) then();
+}
+function dive(then) {
+  if (!root.classList.contains('surface')) { if (then) then(); return; }
+  if (diving) return;
+  diving = true;
+  root.classList.add('diving');
+  if (!sea) {
+    flash('splash');
+    goUnder(then);
+    return;
+  }
+  sea.dive(() => goUnder(then));
+}
+$('#dive').addEventListener('click', () => dive(() => {
+  // drift down a little, so the first thing you see is open water
+  window.scrollTo({ top: window.innerHeight * 0.55, behavior: calm ? 'auto' : 'smooth' });
+}));
 
 // ---------- navigation ----------
 function arrive(i, focus) {
@@ -89,54 +141,41 @@ function arrive(i, focus) {
     const head = sec.querySelector('h1, h2');
     if (head) head.focus({ preventScroll: true });
   }
-  sec.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+  if (i === 0) window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+  else sec.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
   if (history.replaceState) history.replaceState(null, '', '#' + sec.id);
 }
-
-// The duck swims to the pad first. Then the page moves.
 function go(i, focus) {
   if (i < 0 || i >= sections.length) return;
-  // on a phone the pads are parked off screen once you scroll, so there is nowhere to swim
-  const padsAway = root.classList.contains('compact') && portrait.matches;
-  if (!pond || calm || padsAway) {
-    if (pond && !padsAway) pond.goTo(i, null);
-    arrive(i, focus);
+  if (root.classList.contains('surface')) {
+    if (i === 0) return;
+    dive(() => arrive(i, focus));
     return;
   }
-  busy = true;
-  pond.goTo(i, (ok) => {
-    busy = false;
-    if (ok !== false) arrive(i, focus);
-  });
+  if (sea) sea.burst();
+  arrive(i, focus);
 }
-
-padEls.forEach((el, i) => {
-  el.addEventListener('click', (e) => go(i, e.detail === 0));
-  const hover = (on) => () => pond && pond.setHover(i, on);
-  el.addEventListener('pointerenter', hover(true));
-  el.addEventListener('pointerleave', hover(false));
-  el.addEventListener('focus', hover(true));
-  el.addEventListener('blur', hover(false));
-});
-jumpEls.forEach((el, i) => {
+navEls.forEach((el, i) => {
   el.addEventListener('click', (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
     go(i, e.detail === 0);
   });
 });
+let keys = '';
 window.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const tag = e.target && e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
   if (e.key >= '1' && e.key <= '4') go(+e.key - 1, true);
+  // type 99
+  if (e.key.length === 1) {
+    keys = (keys + e.key).slice(-2);
+    if (keys === '99') { keys = ''; showTv('Brooklyn Nine-Nine', 'Nine-Nine!'); if (sea) sea.burst(); }
+  }
 });
-
 function setCurrent(i) {
-  current = i;
-  padEls.forEach((el, n) => el.setAttribute('aria-current', n === i ? 'true' : 'false'));
-  jumpEls.forEach((el, n) => el.setAttribute('aria-current', n === i ? 'true' : 'false'));
-  if (pond) pond.setCurrent(i);
+  navEls.forEach((el, n) => el.setAttribute('aria-current', n === i ? 'true' : 'false'));
 }
 setCurrent(0);
 if ('IntersectionObserver' in window) {
@@ -146,18 +185,35 @@ if ('IntersectionObserver' in window) {
   sections.forEach((s) => seen.observe(s));
 }
 
-// Past the hero, the pads park at the edge so the writing has room.
-function checkCompact() {
-  const on = window.scrollY > window.innerHeight * 0.45;
-  if (on === root.classList.contains('compact')) return;
-  root.classList.toggle('compact', on);
-  if (pond) pond.setCompact(on);
+// ---------- the TV and its remote ----------
+let lastLine = '', tvIdle = 0;
+function showTv(show, line) {
+  tvEl.querySelector('.tv-show').textContent = show;
+  tvEl.querySelector('.tv-line').textContent = line;
+  tvEl.classList.add('lit');
+  tvEl.classList.remove('blink');
+  void tvEl.offsetWidth;
+  tvEl.classList.add('blink');
+  if (sea) sea.setTv(true);
+  clearTimeout(tvIdle);
+  // an old set left on under water does not stay on for long
+  tvIdle = setTimeout(() => { tvEl.classList.remove('lit'); if (sea) sea.setTv(false); }, 14000);
 }
-window.addEventListener('scroll', checkCompact, { passive: true });
-checkCompact();
+remoteEl.addEventListener('click', () => {
+  let show, line;
+  do {
+    const pool = Math.random() < 0.8 ? MAIN : WILD;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    show = pick[0];
+    line = pick[1][Math.floor(Math.random() * pick[1].length)];
+  } while (line === lastLine);
+  lastLine = line;
+  showTv(show, line);
+  sfx('click');
+});
 
-// ---------- Medium lines: bottles, boats and a bird ----------
-// Without JS every line is simply shown. With JS they start folded away.
+// ---------- Medium lines, in bottles ----------
+// Without JS every line is simply shown. With JS they start rolled up.
 document.querySelectorAll('.floater').forEach((li) => {
   const btn = li.querySelector('button');
   const note = li.querySelector('.note');
@@ -168,57 +224,31 @@ document.querySelectorAll('.floater').forEach((li) => {
     note.classList.toggle('unfold', open);
   };
   set(false);
-  btn.addEventListener('click', () => set(note.hidden));
+  btn.addEventListener('click', () => { set(note.hidden); sfx('paper'); });
 });
+
+initKick({ calm, sfx, flash });
 
 // ---------- input ----------
-const onWater = (t) => !(t.closest && t.closest('a, button, .sheet, .note, .kick-wrap, .desk, .telly, .jar-wrap, #duck'));
-
+const onWater = (t) => !(t.closest && t.closest('a, button, .plate, .note, .kick-wrap'));
 window.addEventListener('pointermove', (e) => {
-  if (pond && e.pointerType === 'mouse') pond.pointerMove(e.clientX, e.clientY);
+  if (sea && e.pointerType === 'mouse') sea.pointerMove(e.clientX, e.clientY);
 }, { passive: true });
-
 window.addEventListener('click', (e) => {
-  if (!pond || !onWater(e.target)) return;
-  const touch = e.pointerType ? e.pointerType !== 'mouse' : window.matchMedia('(hover: none)').matches;
-  pond.tap(e.clientX, e.clientY, touch);
-  sfx('ripple');
+  if (!sea || !onWater(e.target)) return;
+  sea.tap(e.clientX, e.clientY);
+  sfx('bubble');
 });
-
-// Touch: drag the duck, drop it on a lily pad.
-let dragId = null;
-duckEl.addEventListener('pointerdown', (e) => {
-  if (!pond || e.pointerType === 'mouse') return;
-  dragId = e.pointerId;
-  duckEl.setPointerCapture(dragId);
-  pond.dragStart();
-  pond.dragMove(e.clientX, e.clientY);
-  e.preventDefault();
-});
-duckEl.addEventListener('pointermove', (e) => {
-  if (e.pointerId === dragId) pond.dragMove(e.clientX, e.clientY);
-});
-const drop = (e) => {
-  if (e.pointerId !== dragId) return;
-  dragId = null;
-  const hit = pond.dragEnd();
-  if (hit >= 0) arrive(hit, false);
-};
-duckEl.addEventListener('pointerup', drop);
-duckEl.addEventListener('pointercancel', drop);
-
 let resizeT = 0;
 window.addEventListener('resize', () => {
   clearTimeout(resizeT);
-  resizeT = setTimeout(() => pond && pond.layout(), 80);
+  resizeT = setTimeout(() => { if (sea) sea.layout(); measureStops(); onScroll(); }, 80);
 });
 document.addEventListener('visibilitychange', () => {
-  if (!pond) return;
-  if (document.hidden) pond.stop(); else pond.start();
+  if (audio) audio.setHidden(document.hidden);
+  if (!sea) return;
+  if (document.hidden) sea.stop(); else sea.start();
 });
-
-initExtras({ getPond: () => pond, calm });
-const weather = initWeather({ getPond: () => pond, calm });
 
 // ---------- boot ----------
 function hasWebGL() {
@@ -229,41 +259,45 @@ function hasWebGL() {
     return false;
   }
 }
-
-function useFlat() {
-  root.classList.remove('pond-on');
-  root.classList.add('pond-flat');
-  padEls.forEach((el) => el.setAttribute('style', el.dataset.spot));
-  pond = createFlatPond();
-  pond.start();
-}
-
-// keep the hand-set pad spots so the flat pond can restore them
-padEls.forEach((el) => { el.dataset.spot = el.getAttribute('style'); });
+// arriving part way down the page (a reload, or a link to a section): skip the boat
+const startUnder = window.scrollY > 40 || (location.hash && location.hash !== '#intro');
+if (startUnder) { root.classList.remove('surface'); root.classList.add('under'); }
 
 function boot() {
-  if (!hasWebGL()) { useFlat(); return; }
-  import('./pond.js').then(({ createPond }) => {
-    const p = createPond({ canvas, padEls, calm, onWake: () => sfx('paddle') });
-    pond = p;
-    pond.setCurrent(current);
-    pond.setCompact(root.classList.contains('compact'));
-    pond.setNight(+getComputedStyle(root).getPropertyValue('--night') || 0);
-    // in 3D the DOM duck is only a grab handle that tracks the real one
-    const track = () => {
-      if (pond !== p) return;
-      duckEl.style.transform = `translate(${p.duckScreen.x.toFixed(1)}px, ${p.duckScreen.y.toFixed(1)}px)`;
-      requestAnimationFrame(track);
-    };
-    pond.start();
-    track();
-    root.classList.add('pond-on');
-    canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); p.stop(); useFlat(); });
+  measureStops();
+  onScroll();
+  if (!hasWebGL()) return;
+  import('./sea.js').then(({ createSea }) => {
+    sea = createSea({
+      canvas, calm,
+      onSplash: () => { flash('splash'); sfx('dive'); if (audio) audio.setUnder(true); },
+      onDuck: showDepth,
+      onTv: (r) => {
+        const on = r.visible && tvEl.classList.contains('lit');
+        tvEl.classList.toggle('on', on);
+        if (on) {
+          tvEl.style.width = r.w.toFixed(1) + 'px';
+          tvEl.style.height = r.h.toFixed(1) + 'px';
+          tvEl.style.transform = `translate(${r.x.toFixed(1)}px, ${r.y.toFixed(1)}px) rotate(${r.rot.toFixed(4)}rad) translate(-50%, -50%)`;
+        }
+      },
+      onRemote: (r) => {
+        remoteEl.classList.toggle('on', r.visible);
+        if (!r.visible) return;
+        const s = Math.max(44, r.r * 2);
+        remoteEl.style.width = remoteEl.style.height = s.toFixed(0) + 'px';
+        remoteEl.style.transform = `translate(${(r.x - s / 2).toFixed(1)}px, ${(r.y - s / 2).toFixed(1)}px)`;
+      }
+    });
+    try { root.style.setProperty('--rust-img', `url(${sea.rustImage()})`); } catch (err) { /* the plain gradient stays */ }
+    if (!root.classList.contains('surface')) { sea.setDepth(depthAt(window.scrollY)); sea.plunge(); }
+    sea.start();
+    root.classList.add('sea-on');
+    canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); sea.stop(); sea = null; root.classList.remove('sea-on'); });
   }).catch((err) => {
-    console.warn('3D pond did not load, using the flat one.', err);
-    useFlat();
+    console.warn('The sea did not load. The page still works without it.', err);
   });
 }
-
 if (document.readyState === 'complete') boot();
 else window.addEventListener('load', boot, { once: true });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measureStops(); onScroll(); });

@@ -1,110 +1,66 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en-US" class="surface">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aakash Ashok, content writer</title>
 <meta name="description" content="Aakash Ashok writes for D2C shelves and B2B boardrooms. Strictly no em dashes.">
-<meta name="theme-color" content="#a9e8dc">
+<meta name="theme-color" content="#f6dcc0">
 <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="./assets/fonts/sacramento-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="./assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-<a class="skip" href="#writing">Skip the pond and go to the writing</a>
+<a class="skip" href="#writing">Skip the dive and go to the writing</a>
 
-<canvas id="pond" aria-hidden="true"></canvas>
-
-<div id="nightshade" aria-hidden="true"></div>
-<div id="sky" aria-hidden="true"></div>
-<canvas id="air" aria-hidden="true"></canvas>
-<div id="glass" aria-hidden="true"></div>
+<canvas id="sea" aria-hidden="true"></canvas>
+<div id="flash" aria-hidden="true"></div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <g id="cat-face">
-      <circle cx="33" cy="28" r="2.4" fill="#0e3a40"/><circle cx="47" cy="28" r="2.4" fill="#0e3a40"/>
-      <path d="M38 33h4l-2 2.6Z" fill="#ff8fa3"/>
-      <path d="M40 35.6q-3 4-6 1M40 35.6q3 4 6 1M26 32l-9-2M26 35l-9 2M54 32l9-2M54 35l9 2" fill="none" stroke="#0e3a40" stroke-width="1.4" stroke-linecap="round"/>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9fbf6" stop-opacity=".75"/><stop offset=".5" stop-color="#9fd8cf" stop-opacity=".45"/><stop offset="1" stop-color="#4f9c97" stop-opacity=".7"/></linearGradient>
+    <linearGradient id="cork" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c79a63"/><stop offset="1" stop-color="#8a6238"/></linearGradient>
+    <linearGradient id="rusty" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8632a"/><stop offset=".35" stop-color="#6b3a1c"/><stop offset=".6" stop-color="#93501f"/><stop offset="1" stop-color="#3e2413"/></linearGradient>
+    <radialGradient id="leather" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#b07a48"/><stop offset=".55" stop-color="#7d4f2a"/><stop offset="1" stop-color="#452814"/></radialGradient>
+    <linearGradient id="sealskin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f5a60"/><stop offset=".45" stop-color="#7d888b"/><stop offset="1" stop-color="#d3d6cf"/></linearGradient>
+    <!-- a corked bottle with a rolled note inside, lying in the current -->
+    <g id="bottle">
+      <g transform="rotate(-9 75 35)">
+        <path d="M14 22q0-8 9-8h62q9 0 14 6l10 3h14v24h-14l-10 3q-5 6-14 6H23q-9 0-9-8Z" fill="url(#glass)" stroke="#0f2e36" stroke-opacity=".55" stroke-width="1.5"/>
+        <rect x="121" y="24.5" width="15" height="21" rx="3" fill="url(#cork)"/>
+        <rect x="30" y="24" width="50" height="22" rx="4" fill="#f3e7cf"/>
+        <path d="M38 31h34M38 36h34M38 41h20" stroke="#6b5a3e" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+        <path d="M30 24q-5 11 0 22" fill="none" stroke="#c9b68e" stroke-width="2"/>
+        <path d="M22 20h58" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+        <path d="M20 50q30 5 64 0" stroke="#2f6f69" stroke-width="2.5" stroke-linecap="round" opacity=".35"/>
+      </g>
     </g>
-    <symbol id="cat-sit" viewBox="0 0 80 72">
-      <path d="M56 62q18 2 15-16" fill="none" stroke="var(--fur)" stroke-width="6" stroke-linecap="round"/>
-      <ellipse cx="40" cy="55" rx="17" ry="15" fill="var(--fur)"/>
-      <path d="M23 22 19 5l15 9ZM57 22 61 5 46 14Z" fill="var(--fur)"/>
-      <circle cx="40" cy="28" r="19" fill="var(--fur)"/>
-      <path d="M33 60v8M47 60v8" stroke="#0e3a40" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
-      <use href="#cat-face"/>
-    </symbol>
-    <symbol id="cat-loaf" viewBox="0 0 80 72">
-      <path d="M12 66q-4-30 28-30t28 30Z" fill="var(--fur)"/>
-      <path d="M23 32 19 15l15 9ZM57 32 61 15 46 24Z" fill="var(--fur)"/>
-      <circle cx="40" cy="38" r="19" fill="var(--fur)"/>
-      <path d="M30 38q3 3 6 0M44 38q3 3 6 0" fill="none" stroke="#0e3a40" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M38 43h4l-2 2.6Z" fill="#ff8fa3"/>
-      <path d="M26 43l-9-1M26 46l-9 3M54 43l9-1M54 46l9 3" fill="none" stroke="#0e3a40" stroke-width="1.4" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="cat-peek" viewBox="0 0 80 72">
-      <path d="M23 46 19 29l15 9ZM57 46 61 29 46 38Z" fill="var(--fur)"/>
-      <path d="M21 72V52a19 19 0 0 1 38 0v20Z" fill="var(--fur)"/>
-      <g transform="translate(0 24)"><use href="#cat-face"/></g>
-      <ellipse cx="27" cy="70" rx="6" ry="4" fill="#fff"/><ellipse cx="53" cy="70" rx="6" ry="4" fill="#fff"/>
-    </symbol>
-    <symbol id="cat-stretch" viewBox="0 0 80 72">
-      <path d="M64 40q10-14 2-26" fill="none" stroke="var(--fur)" stroke-width="6" stroke-linecap="round"/>
-      <path d="M18 62q4-26 26-24t22 4v20h-8V50q-14 4-24 12Z" fill="var(--fur)"/>
-      <path d="M8 50 6 36l11 6ZM30 48l4-13-12 5Z" fill="var(--fur)"/>
-      <circle cx="19" cy="54" r="13" fill="var(--fur)"/>
-      <path d="M13 53q2 2 4 0M21 53q2 2 4 0" fill="none" stroke="#0e3a40" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M17.5 57h3l-1.5 2Z" fill="#ff8fa3"/>
-    </symbol>
   </defs>
 </svg>
 
-<button type="button" id="sound" aria-pressed="false" aria-label="Sound">
-  <svg viewBox="0 0 64 44" width="64" height="44" aria-hidden="true" focusable="false">
-    <path d="M32 3C49 3 61 11 61 22S49 41 32 41 3 33 3 22 15 3 32 3Z" fill="#8fd669" stroke="#2f8f4e" stroke-width="3"/>
-    <path d="M32 22 60 12" stroke="#2f8f4e" stroke-width="3" stroke-linecap="round"/>
-    <path d="M18 18h6l8-6v20l-8-6h-6Z" fill="#0e3a40"/>
-    <g class="waves" fill="none" stroke="#0e3a40" stroke-width="2.6" stroke-linecap="round"><path d="M37 17q4 5 0 10"/><path d="M42 13q7 9 0 18"/></g>
-    <path class="mute" d="M37 17l9 10M46 17l-9 10" fill="none" stroke="#0e3a40" stroke-width="2.6" stroke-linecap="round"/>
-  </svg>
-</button>
-
-<button type="button" id="rain" aria-pressed="false" aria-label="Rain">
-  <svg viewBox="0 0 64 44" width="64" height="44" aria-hidden="true" focusable="false">
-    <path d="M32 3C49 3 61 11 61 22S49 41 32 41 3 33 3 22 15 3 32 3Z" fill="#8fd669" stroke="#2f8f4e" stroke-width="3"/>
-    <path d="M32 22 6 30" stroke="#2f8f4e" stroke-width="3" stroke-linecap="round"/>
-    <path d="M22 24q-6 0-6-5t6-5q2-6 9-5t7 6q6 0 6 5t-6 4Z" fill="#fff" stroke="#0e3a40" stroke-width="2.4" stroke-linejoin="round"/>
-    <g class="drops" stroke="#0e3a40" stroke-width="2.4" stroke-linecap="round"><path d="M24 29l-2 5M32 29l-2 5M40 29l-2 5"/></g>
-  </svg>
-</button>
-
-<nav class="jump" aria-label="Sections">
+<nav class="gauge" aria-label="Sections">
   <a href="#intro" data-go="0">Intro</a>
   <a href="#writing" data-go="1">Writing</a>
   <a href="#about" data-go="2">About</a>
   <a href="#contact" data-go="3">Contact</a>
+  <span class="depth" aria-hidden="true"><i></i><b>0 m</b></span>
 </nav>
 
-<!-- Lily pads. x and y are landscape positions, px and py are portrait ones, cx and cy are where they park once you scroll. All in percent of the screen. -->
-<div class="pads" role="group" aria-label="Lily pads. Pick one and the duck swims there first.">
-  <button type="button" class="pad" data-go="0" style="--x:57;--y:63;--px:22;--py:80;--cx:89.5;--cy:16">Intro</button>
-  <button type="button" class="pad" data-go="1" style="--x:79;--y:37;--px:80;--py:52;--cx:93;--cy:47">Writing</button>
-  <button type="button" class="pad" data-go="2" style="--x:74;--y:82;--px:48;--py:92;--cx:95.5;--cy:64">About</button>
-  <button type="button" class="pad" data-go="3" style="--x:92;--y:61;--px:77;--py:84;--cx:96;--cy:79">Contact</button>
-</div>
-
-<div id="duck" aria-hidden="true">
-  <svg viewBox="0 0 64 56" width="64" height="56" focusable="false">
-    <ellipse cx="30" cy="38" rx="24" ry="15" fill="#ffd338" stroke="#0e3a40" stroke-width="2.5"/>
-    <path d="M8 34 Q2 24 10 22 Q12 30 18 32Z" fill="#ffd338" stroke="#0e3a40" stroke-width="2.5" stroke-linejoin="round"/>
-    <circle cx="42" cy="18" r="13" fill="#ffd338" stroke="#0e3a40" stroke-width="2.5"/>
-    <path d="M53 17 Q63 17 61 23 Q56 26 51 23Z" fill="#f26a3d" stroke="#0e3a40" stroke-width="2.5" stroke-linejoin="round"/>
-    <circle cx="45" cy="14" r="2.6" fill="#0e3a40"/>
-    <path d="M22 38 Q30 30 38 39" fill="none" stroke="#0e3a40" stroke-width="2.5" stroke-linecap="round"/>
+<button type="button" id="sound" aria-pressed="false" aria-label="Sound">
+  <svg viewBox="0 0 44 44" width="44" height="44" aria-hidden="true" focusable="false">
+    <path d="M10 18h6l9-7v22l-9-7h-6Z" fill="currentColor"/>
+    <g class="waves" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M29 17q4 5 0 10"/><path d="M33 13q7 9 0 18"/></g>
+    <path class="mute" d="M29 17l8 10M37 17l-8 10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
   </svg>
+</button>
+
+<!-- The sunken TV is part of the 3D scene. This is its screen, laid over it so the words stay sharp. -->
+<div id="tv" role="status" aria-live="polite">
+  <p class="tv-show"></p>
+  <p class="tv-line"></p>
 </div>
+<button type="button" id="remote" aria-label="TV remote"></button>
 
 <main>
   <section id="intro" class="hero" aria-labelledby="name">
@@ -112,112 +68,46 @@
       <h1 id="name" tabindex="-1">Aakash Ashok</h1>
       <p class="tagline">Content Writer? I barely know 'er.</p>
       <p class="pitch">Words for D2C shelves and B2B boardrooms. Strictly No em dashes.</p>
-      <div class="telly">
-        <div class="tvset">
-          <svg class="antenna" viewBox="0 0 80 40" width="80" height="40" aria-hidden="true" focusable="false">
-            <path d="M40 40 12 4M40 40 66 8" fill="none" stroke="#0e3a40" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="12" cy="4" r="3.5" fill="#f26a3d" stroke="#0e3a40" stroke-width="2"/><circle cx="66" cy="8" r="3.5" fill="#f26a3d" stroke="#0e3a40" stroke-width="2"/>
-          </svg>
-          <div class="screen idle" id="tv" role="status" aria-live="polite">
-            <p class="tv-show"></p>
-            <p class="tv-line"></p>
-            <svg class="cat" viewBox="0 0 80 72" aria-hidden="true" focusable="false"><use href="#cat-loaf"/></svg>
-          </div>
-          <div class="knobs" aria-hidden="true"><i></i><i></i><span></span></div>
-        </div>
-        <button type="button" class="remote" aria-label="TV remote" aria-controls="tv">
-          <svg viewBox="0 0 120 64" width="120" height="64" aria-hidden="true" focusable="false">
-            <g transform="rotate(-12 60 30)">
-              <rect x="10" y="16" width="100" height="28" rx="9" fill="#2b4a55" stroke="#0e3a40" stroke-width="3"/>
-              <circle cx="24" cy="30" r="5" fill="#f26a3d" stroke="#0e3a40" stroke-width="2"/>
-              <g fill="#cfe9e4"><circle cx="42" cy="25" r="2.6"/><circle cx="52" cy="25" r="2.6"/><circle cx="62" cy="25" r="2.6"/><circle cx="42" cy="35" r="2.6"/><circle cx="52" cy="35" r="2.6"/><circle cx="62" cy="35" r="2.6"/></g>
-              <rect x="76" y="22" width="24" height="6" rx="3" fill="#ffd338"/><rect x="76" y="32" width="24" height="6" rx="3" fill="#8fd8cf"/>
-            </g>
-            <path d="M14 58q12-6 24 0t24 0t24 0t24 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
+      <button type="button" id="dive"><span>Dive in</span></button>
     </div>
   </section>
 
+  <div class="open-water" aria-hidden="true"></div>
+
   <section id="writing" class="stop split" aria-labelledby="h-writing">
-    <div class="sheet-wrap">
-      <!-- A cat under the sheet. Its paw slides out, plucks the floating flower and takes it back. -->
-      <div class="reach" aria-hidden="true">
-        <svg class="paw" viewBox="0 0 70 150" focusable="false">
-          <path d="M19 0h32v104q9 5 9 20 0 23-25 23T10 124q0-15 9-20Z" fill="#f7a23b" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M20 22q15 7 30 0M20 44q15 7 30 0M20 66q15 7 30 0M20 88q15 7 30 0" fill="none" stroke="#d9801f" stroke-width="4.500" stroke-linecap="round"/>
-          <path d="M13 118q-2 22 22 26 24-4 22-26Q35 104 13 118Z" fill="#fff6e2"/>
-          <path d="M27 130v14M43 130v14" stroke="#0e3a40" stroke-width="2.600" stroke-linecap="round"/>
-          <path d="M19 144l-1 5M35 147v5M51 144l1 5" stroke="#0e3a40" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <svg class="bloom" viewBox="0 0 40 40" focusable="false">
-          <g fill="#ff9db5" stroke="#0e3a40" stroke-width="2"><circle cx="20" cy="9" r="7"/><circle cx="30.500" cy="16.500" r="7"/><circle cx="26.500" cy="29" r="7"/><circle cx="13.500" cy="29" r="7"/><circle cx="9.500" cy="16.500" r="7"/></g>
-          <circle cx="20" cy="20" r="5.500" fill="#ffd338" stroke="#0e3a40" stroke-width="2"/>
-        </svg>
-        <i></i>
-      </div>
-      <div class="sheet memo">
-        <button type="button" class="prop clip" aria-label="Paperclip" aria-pressed="false">
-          <svg viewBox="0 0 40 90" width="40" height="90" aria-hidden="true" focusable="false">
-            <path d="M12 26v40a9 9 0 0 0 18 0V18a13 13 0 0 0-26 0v50" fill="none" stroke="#6f8f99" stroke-width="3.5" stroke-linecap="round"/>
-          </svg>
-        </button>
-        <svg class="jello" viewBox="0 0 90 70" width="90" height="70" aria-hidden="true" focusable="false">
-          <path d="M14 58Q12 16 45 14t31 44Z" fill="#ffd94a" fill-opacity=".8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <g transform="rotate(-8 45 42)"><rect x="27" y="38" width="38" height="9" rx="3" fill="#33434a"/><rect x="29" y="30" width="34" height="8" rx="4" fill="#586b73"/><rect x="27" y="47" width="38" height="4" rx="2" fill="#1f2c31"/></g>
-          <path d="M24 26q6-6 14-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-          <path d="M6 60h78" stroke="#0e3a40" stroke-width="3" stroke-linecap="round"/>
-        </svg>
-        <h2 id="h-writing" tabindex="-1">Writing</h2>
+    <div class="plate">
+      <h2 id="h-writing" tabindex="-1">Writing</h2>
 
-        <h3>Blogs and articles</h3>
-        <p>The personal ones are out on the water. Pick one up.</p>
-        <p>I write on Medium as Mazhaiyil, which means 'in the rain'. I don't remember why I picked it, but I suspect it was raining.</p>
-        <p><a href="https://mazhaiyil.medium.com">Read Mazhaiyil on Medium</a></p>
+      <h3>Blogs and articles</h3>
+      <p>The personal ones are adrift in bottles. Pick one up.</p>
+      <p>I write on Medium as Mazhaiyil, which means 'in the rain'. I don't remember why I picked it, but I suspect it was raining.</p>
+      <p><a href="https://mazhaiyil.medium.com">Read Mazhaiyil on Medium</a></p>
 
-        <p class="gap">Two from my professional work.</p>
-        <ul class="work">
-          <li><a href="https://www.codilar.com/blog/how-much-does-an-apparel-ecommerce-website-cost">How Much Does an Apparel eCommerce Website Cost in 2026?</a></li>
-          <li><a href="https://www.codilar.com/blog/adobe-commerce-b2b-development-for-us-industrial-distributors-and-manufacturers">Adobe Commerce B2B Development for US Industrial Distributors and Manufacturers</a></li>
-        </ul>
+      <p class="gap">Two from my professional work.</p>
+      <ul class="work">
+        <li><a href="https://www.codilar.com/blog/how-much-does-an-apparel-ecommerce-website-cost">How Much Does an Apparel eCommerce Website Cost in 2026?</a></li>
+        <li><a href="https://www.codilar.com/blog/adobe-commerce-b2b-development-for-us-industrial-distributors-and-manufacturers">Adobe Commerce B2B Development for US Industrial Distributors and Manufacturers</a></li>
+      </ul>
 
-        <h3>Website copy</h3>
-        <p><a href="https://www.cherrycitykitties.com">Cherry City Kitties</a> is one of the websites I wrote the copy for. It's a site about cats (who doesn't like them).</p>
-      </div>
+      <h3>Website copy</h3>
+      <p><a href="https://www.cherrycitykitties.com">Cherry City Kitties</a> is one of the websites I wrote the copy for. It's a site about cats (who doesn't like them).</p>
     </div>
 
     <div class="aside">
       <ul class="drift" aria-label="Lines from Medium">
-        <li class="floater boat">
+        <li class="floater">
           <button type="button" aria-expanded="true" aria-controls="line-1">
-            <svg viewBox="0 0 140 92" width="140" height="92" aria-hidden="true" focusable="false">
-              <path d="M70 8 99 52H41Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <path d="M70 8v44" stroke="#0e3a40" stroke-width="2" opacity=".35"/>
-              <path d="M13 52h114l-25 25H38Z" fill="#fff1c4" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <path d="M41 52 70 77l29-25" fill="none" stroke="#0e3a40" stroke-width="2" opacity=".3"/>
-              <path d="M10 84q15-7 30 0t30 0t30 0t30 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-            <span class="sr">Paper boat. A line from The smiling shopkeeper.</span>
+            <svg viewBox="0 0 150 70" aria-hidden="true" focusable="false"><use href="#bottle"/></svg>
+            <span class="sr">Message in a bottle. A line from The smiling shopkeeper.</span>
           </button>
           <div class="note" id="line-1">
             <blockquote>“We come across millions of people in our lifetime.”</blockquote>
             <a href="https://mazhaiyil.medium.com/the-smiling-shopkeeper-by-mazhaiyil-c38b3eb0e1db">The smiling shopkeeper, on Medium</a>
           </div>
         </li>
-        <li class="floater bottle">
+        <li class="floater">
           <button type="button" aria-expanded="true" aria-controls="line-2">
-            <svg viewBox="0 0 140 92" width="140" height="92" aria-hidden="true" focusable="false">
-              <g transform="rotate(-13 70 46)">
-                <rect x="18" y="26" width="80" height="38" rx="17" fill="#e4f8f2" fill-opacity=".8" stroke="#0e3a40" stroke-width="3"/>
-                <path d="M96 35h13q5 0 5 5v10q0 5-5 5H96" fill="#e4f8f2" fill-opacity=".8" stroke="#0e3a40" stroke-width="3"/>
-                <rect x="113" y="37" width="12" height="16" rx="3" fill="#c98b4a" stroke="#0e3a40" stroke-width="3"/>
-                <rect x="35" y="35" width="46" height="20" rx="3" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.5"/>
-                <path d="M43 42h30M43 48h19" stroke="#0e3a40" stroke-width="2" stroke-linecap="round" opacity=".45"/>
-                <path d="M27 35q9-5 22-5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-              </g>
-              <path d="M10 84q15-7 30 0t30 0t30 0t30 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-            </svg>
+            <svg viewBox="0 0 150 70" aria-hidden="true" focusable="false"><use href="#bottle"/></svg>
             <span class="sr">Message in a bottle. A line from Would she smile?.</span>
           </button>
           <div class="note" id="line-2">
@@ -225,40 +115,19 @@
             <a href="https://mazhaiyil.medium.com/would-she-smile-1e18a31160dd">Would she smile?, on Medium</a>
           </div>
         </li>
-        <li class="floater bird">
+        <li class="floater">
           <button type="button" aria-expanded="true" aria-controls="line-3">
-            <svg viewBox="0 0 140 104" width="140" height="104" aria-hidden="true" focusable="false">
-              <path d="M104 34q16-8 24-2q-10 4-14 14" fill="#fffbe8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <path d="M44 40q20-22 46-10q12 6 20 2q-2 22-30 27q-26 4-36-19Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <path class="wing" d="M62 40q8-30 34-36q-2 24-16 40Z" fill="#8fd8cf" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <path d="M45 39 29 44l15 5Z" fill="#f26a3d" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <circle cx="54" cy="38" r="2.6" fill="#0e3a40"/>
-              <path d="M31 46v16" stroke="#0e3a40" stroke-width="2"/>
-              <g transform="rotate(-7 31 76)">
-                <rect x="15" y="62" width="32" height="26" rx="2" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.5"/>
-                <path d="M21 70h20M21 76h20M21 82h12" stroke="#0e3a40" stroke-width="2" stroke-linecap="round" opacity=".45"/>
-              </g>
-            </svg>
-            <span class="sr">Bird carrying a paper. A line from Days in Bangalore.</span>
+            <svg viewBox="0 0 150 70" aria-hidden="true" focusable="false"><use href="#bottle"/></svg>
+            <span class="sr">Message in a bottle. A line from Days in Bangalore.</span>
           </button>
           <div class="note" id="line-3">
             <blockquote>“These days, I’m mostly thinking about what food I should order, or whether I should skip the meal altogether.”</blockquote>
             <a href="https://mazhaiyil.medium.com/days-in-bangalore-my-everyday-chaos-and-her-peaceful-presence-by-mazhaiyil-c09ed53653ef">Days in Bangalore, on Medium</a>
           </div>
         </li>
-        <li class="floater bottle">
+        <li class="floater">
           <button type="button" aria-expanded="true" aria-controls="line-4">
-            <svg viewBox="0 0 140 92" width="140" height="92" aria-hidden="true" focusable="false">
-              <g transform="rotate(-13 70 46)">
-                <rect x="18" y="26" width="80" height="38" rx="17" fill="#e4f8f2" fill-opacity=".8" stroke="#0e3a40" stroke-width="3"/>
-                <path d="M96 35h13q5 0 5 5v10q0 5-5 5H96" fill="#e4f8f2" fill-opacity=".8" stroke="#0e3a40" stroke-width="3"/>
-                <rect x="113" y="37" width="12" height="16" rx="3" fill="#c98b4a" stroke="#0e3a40" stroke-width="3"/>
-                <rect x="35" y="35" width="46" height="20" rx="3" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.5"/>
-                <path d="M43 42h30M43 48h19" stroke="#0e3a40" stroke-width="2" stroke-linecap="round" opacity=".45"/>
-                <path d="M27 35q9-5 22-5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-              </g>
-              <path d="M10 84q15-7 30 0t30 0t30 0t30 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-            </svg>
+            <svg viewBox="0 0 150 70" aria-hidden="true" focusable="false"><use href="#bottle"/></svg>
             <span class="sr">Message in a bottle. A line from My lackluster existence.</span>
           </button>
           <div class="note" id="line-4">
@@ -266,16 +135,10 @@
             <a href="https://mazhaiyil.medium.com/my-lackluster-existence-how-nice-pillows-and-a-warm-blanket-became-my-portal-to-paradise-6693c3fb8653">My lackluster existence, on Medium</a>
           </div>
         </li>
-        <li class="floater boat">
+        <li class="floater">
           <button type="button" aria-expanded="true" aria-controls="line-5">
-            <svg viewBox="0 0 140 92" width="140" height="92" aria-hidden="true" focusable="false">
-              <path d="M70 8 99 52H41Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <path d="M70 8v44" stroke="#0e3a40" stroke-width="2" opacity=".35"/>
-              <path d="M13 52h114l-25 25H38Z" fill="#fff1c4" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <path d="M41 52 70 77l29-25" fill="none" stroke="#0e3a40" stroke-width="2" opacity=".3"/>
-              <path d="M10 84q15-7 30 0t30 0t30 0t30 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-            <span class="sr">Paper boat. A line from My Dearest.</span>
+            <svg viewBox="0 0 150 70" aria-hidden="true" focusable="false"><use href="#bottle"/></svg>
+            <span class="sr">Message in a bottle. A line from My Dearest.</span>
           </button>
           <div class="note" id="line-5">
             <blockquote>“But I promise, during the next summer, I will be near you and we will watch the sky together.”</blockquote>
@@ -283,298 +146,84 @@
           </div>
         </li>
       </ul>
-
-      <!-- WRITING HABITS DESK. The four data-note lines below are DRAFTS in Aakash's voice. Edit them freely. -->
-      <div class="desk">
-        <div class="scene">
-        <svg viewBox="0 0 480 292" aria-hidden="true" focusable="false">
-          <rect x="20" y="10" width="150" height="130" rx="6" fill="#27496a" stroke="#0e3a40" stroke-width="3"/>
-          <g class="rain" stroke="#bfe6ff" stroke-width="2.4" stroke-linecap="round">
-            <path d="M40 22l-5 14M66 40l-5 14M88 18l-5 14M112 46l-5 14M138 26l-5 14M52 78l-5 14M80 92l-5 14M104 74l-5 14M130 96l-5 14M154 70l-5 14M34 112l-5 14M62 118l-5 14M118 116l-5 14M146 112l-5 14"/>
-          </g>
-          <path d="M95 10v130M20 75h150" stroke="#0e3a40" stroke-width="3"/>
-          <rect x="11" y="138" width="168" height="11" rx="3" fill="#fff1c4" stroke="#0e3a40" stroke-width="3"/>
-          <path class="glow" d="M262 96 232 205h120l-44-112Z" fill="#ffe98a" opacity=".38"/>
-          <path d="M0 205h400v20H0Z" fill="#dba56b" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M14 225h18v62H14ZM368 225h18v62h-18Z" fill="#c48d55" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M0 288h480" stroke="#0e3a40" stroke-width="2.4" stroke-linecap="round" opacity=".4"/>
-          <!-- journal: lines of writing on the left page, a doodle of the metro on the right -->
-          <path d="M52 198 66 166l52 4 52-4 14 32-66 6Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M118 170v34" stroke="#0e3a40" stroke-width="2.4"/>
-          <g fill="none" stroke="#0e3a40" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M72 176q5-2 9 0t9 0 9 0 9 0M69 183q5-2 9 0t9 0 9 0 9 0M66 190q5-2 9 0t9 0 9 0M64 197q5-2 9 0t9 0" stroke-width="1.5" opacity=".6"/>
-            <path d="M129 180h30q4 0 4 4v6h-38v-6q0-4 4-4Z" stroke-width="1.8"/>
-            <path d="M131 183h7v4h-7ZM141 183h7v4h-7ZM151 183h7v4h-7Z" stroke-width="1.3"/>
-            <circle cx="133" cy="193" r="2.2" stroke-width="1.6"/><circle cx="155" cy="193" r="2.2" stroke-width="1.6"/>
-            <path d="M171 178q-1-4 2.5-4t2 4q-1 2-2.5 3M173 185v.5" stroke-width="1.8"/>
-          </g>
-          <path d="M88 160 100 198" stroke="#f26a3d" stroke-width="4" stroke-linecap="round"/>
-          <path d="M88 160 100 198" stroke="#0e3a40" stroke-width="1" stroke-linecap="round" opacity=".5"/>
-          <g transform="translate(34 195) rotate(20) scale(1.0)"><path d="M-9-3-4-9 3-8 9-4 8 4 4 9-4 8-10 3Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.4" stroke-linejoin="round"/><path d="M-4-9-1-2 9-4M-1-2-10 3M-1-2 4 9M3-8 2-3" fill="none" stroke="#0e3a40" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/></g>
-          <path d="M207 190q-3-34 23-34t23 34" fill="none" stroke="#0e3a40" stroke-width="5" stroke-linecap="round"/>
-          <rect x="198" y="182" width="16" height="23" rx="7" fill="#8fd8cf" stroke="#0e3a40" stroke-width="3"/>
-          <rect x="246" y="182" width="16" height="23" rx="7" fill="#8fd8cf" stroke="#0e3a40" stroke-width="3"/>
-          <path d="M288 172h34v25q0 8-8 8h-18q-8 0-8-8Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M322 178h5q7 0 7 8t-7 8h-5" fill="none" stroke="#0e3a40" stroke-width="3"/>
-          <path d="M288 183h34" stroke="#f26a3d" stroke-width="4"/>
-          <path class="steam" d="M298 164q-5-6 0-12t0-12M311 164q-5-6 0-12t0-12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
-          <path d="M352 205h34M369 205V132L318 104" fill="none" stroke="#0e3a40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M256 104 276 74l50 22-12 24Z" fill="#ffd338" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <!-- the bin, and the drafts that missed it -->
-          <g transform="translate(436 222) rotate(-30) scale(1.0)"><path d="M-9-3-4-9 3-8 9-4 8 4 4 9-4 8-10 3Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.4" stroke-linejoin="round"/><path d="M-4-9-1-2 9-4M-1-2-10 3M-1-2 4 9M3-8 2-3" fill="none" stroke="#0e3a40" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/></g><g transform="translate(450 216) rotate(50) scale(0.9)"><path d="M-9-3-4-9 3-8 9-4 8 4 4 9-4 8-10 3Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.4" stroke-linejoin="round"/><path d="M-4-9-1-2 9-4M-1-2-10 3M-1-2 4 9M3-8 2-3" fill="none" stroke="#0e3a40" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/></g>
-          <path d="M412 226h52l-6 62h-40Z" fill="#8fd8cf" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M408 226h60" stroke="#0e3a40" stroke-width="5" stroke-linecap="round"/>
-          <path d="M425 236l3 44M438 236v44M451 236l-3 44" stroke="#0e3a40" stroke-width="2" stroke-linecap="round" opacity=".45"/>
-          <g transform="translate(398 281) rotate(10) scale(0.9)"><path d="M-9-3-4-9 3-8 9-4 8 4 4 9-4 8-10 3Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.4" stroke-linejoin="round"/><path d="M-4-9-1-2 9-4M-1-2-10 3M-1-2 4 9M3-8 2-3" fill="none" stroke="#0e3a40" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/></g><g transform="translate(472 283) rotate(-60) scale(0.7)"><path d="M-9-3-4-9 3-8 9-4 8 4 4 9-4 8-10 3Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.4" stroke-linejoin="round"/><path d="M-4-9-1-2 9-4M-1-2-10 3M-1-2 4 9M3-8 2-3" fill="none" stroke="#0e3a40" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/></g><g transform="translate(330 283) rotate(35) scale(0.8)"><path d="M-9-3-4-9 3-8 9-4 8 4 4 9-4 8-10 3Z" fill="#fffbe8" stroke="#0e3a40" stroke-width="2.4" stroke-linejoin="round"/><path d="M-4-9-1-2 9-4M-1-2-10 3M-1-2 4 9M3-8 2-3" fill="none" stroke="#0e3a40" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/></g>
-        </svg>
-        <button type="button" class="spot" style="--l:3.3;--t:2.8;--w:35;--h:50" aria-label="Window with rain" data-sound="rain"
-          data-note="I write better when it rains. I also get less done when it rains. Nobody has looked into this."></button>
-        <button type="button" class="spot" style="--l:9.5;--t:54;--w:30.5;--h:18" aria-label="Journal"
-          data-note="This is my journal. The current entry is stuck on one question: what happened to the stranger I met on the metro the other day."></button>
-        <button type="button" class="spot" style="--l:40;--t:51;--w:16;--h:21" aria-label="Headphones"
-          data-note="My listening runs from One Direction to Ye. I don't explain it. The commute is quiet and that's what matters."></button>
-        <button type="button" class="spot" style="--l:56.5;--t:23;--w:25.5;--h:49" aria-label="Mug and lamp"
-          data-note="Bangalore is loud all day. So I write after it stops, with a lamp and whatever is left in this mug."></button>
-        </div>
-        <p class="confession" aria-live="polite"></p>
-      </div>
     </div>
   </section>
 
   <section id="about" class="stop split" aria-labelledby="h-about">
     <div class="col">
-      <div class="sheet">
-        <button type="button" class="prop umbrella" aria-label="Yellow umbrella" aria-pressed="false">
-          <svg viewBox="0 0 80 92" width="80" height="92" aria-hidden="true" focusable="false">
-            <path d="M6 44Q40-6 74 44q-9-8-17 0-9-8-17 0-8-8-17 0-8-8-17 0Z" fill="#ffd338" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-            <path d="M40 44v32q0 9-8 9t-8-8M40 9V4" fill="none" stroke="#0e3a40" stroke-width="3" stroke-linecap="round"/>
-          </svg>
-        </button>
-        <svg class="horn" viewBox="0 0 104 84" width="104" height="84" aria-hidden="true" focusable="false">
-          <path d="M27 27 9 9" stroke="#0e3a40" stroke-width="8" stroke-linecap="round"/>
-          <path d="M27 27 9 9" stroke="#2f6fd6" stroke-width="4.5" stroke-linecap="round"/>
-          <circle cx="42" cy="44" r="24" fill="none" stroke="#0e3a40" stroke-width="11"/>
-          <circle cx="42" cy="44" r="24" fill="none" stroke="#2f6fd6" stroke-width="7"/>
-          <path d="M58 60q14 0 20-14l18 24q-22 12-44 0Z" fill="#2f6fd6" stroke="#0e3a40" stroke-width="2.6" stroke-linejoin="round"/>
-          <ellipse cx="87" cy="58" rx="6" ry="15" transform="rotate(-36 87 58)" fill="#6fa2f0" stroke="#0e3a40" stroke-width="2.6"/>
-          <path d="M35 38v12M42 36v12M49 38v12" stroke="#0e3a40" stroke-width="3.4" stroke-linecap="round"/>
-        </svg>
+      <div class="plate">
         <h2 id="h-about" tabindex="-1">About</h2>
         <p>I'm a CSE graduate with 2 years of content writing experience. I love writing and AI.</p>
         <p>I'm also an avid Arsenal fan. The club has given me my greatest heartbreaks and my deepest euphoria.</p>
         <p>And I'm a big fan of sitcoms, and of jokes that only make you laugh two days later.</p>
       </div>
 
-      <div class="jar-wrap">
-        <p class="jar-line">AI is my working partner. I still do the thinking.</p>
-        <div class="jar-row">
-          <button type="button" class="jar" aria-label="Prompt jar" aria-expanded="true" aria-controls="slips">
-            <svg viewBox="0 0 100 120" width="100" height="120" aria-hidden="true" focusable="false">
-              <rect x="26" y="6" width="48" height="14" rx="4" fill="#c98b4a" stroke="#0e3a40" stroke-width="3"/>
-              <path d="M30 20h40q0 8 10 14v62q0 12-12 12H32q-12 0-12-12V34q10-6 10-14Z" fill="#e4f8f2" fill-opacity=".8" stroke="#0e3a40" stroke-width="3" stroke-linejoin="round"/>
-              <g class="jar-papers" stroke="#0e3a40" stroke-width="2"><rect x="30" y="70" width="22" height="13" rx="2" fill="#fffbe8" transform="rotate(-14 41 76)"/><rect x="46" y="78" width="22" height="13" rx="2" fill="#ffe98a" transform="rotate(10 57 84)"/><rect x="34" y="88" width="22" height="13" rx="2" fill="#fffbe8" transform="rotate(4 45 94)"/><rect x="50" y="62" width="20" height="12" rx="2" fill="#bfeee2" transform="rotate(-6 60 68)"/></g>
-              <path d="M28 44q0 26 2 46" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-              <path d="M6 114q11-6 22 0t22 0t22 0t22 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <ul class="slips" id="slips">
-            <li><strong>I rant</strong> Dump the messy thoughts first, then sort them.</li>
-            <li><strong>I write</strong> Draft side by side, with me steering.</li>
-            <li><strong>I query</strong> Research, fact-checks, quick answers.</li>
-            <li><strong>I get the work done</strong> The deadline gets met.</li>
-          </ul>
-        </div>
+      <div class="plate small">
+        <p class="lead">AI is my working partner. I still do the thinking.</p>
+        <dl class="ways">
+          <div><dt>I rant</dt><dd>Dump the messy thoughts first, then sort them.</dd></div>
+          <div><dt>I write</dt><dd>Draft side by side, with me steering.</dd></div>
+          <div><dt>I query</dt><dd>Research, fact-checks, quick answers.</dd></div>
+          <div><dt>I get the work done</dt><dd>The deadline gets met.</dd></div>
+        </dl>
       </div>
     </div>
 
-    <!-- Penalty kick. The frog explains it, the otter keeps score. -->
+    <!-- Penalty kick. A seal guards a rusted goal. No words on screen by design. -->
     <div class="kick-wrap">
-      <div class="scorebar">
-        <div class="otter" aria-hidden="true">
-          <svg viewBox="0 0 128 104" focusable="false">
-            <!-- the second otter. They hold paws so nobody drifts off. -->
-            <g transform="translate(14 38) scale(.9)">
-              <path d="M96 42q12 2 16 12" fill="none" stroke="#0e3a40" stroke-width="10" stroke-linecap="round"/>
-              <path d="M96 42q12 2 16 12" fill="none" stroke="#cf8552" stroke-width="6" stroke-linecap="round"/>
-              <ellipse cx="62" cy="38" rx="38" ry="15" fill="#cf8552" stroke="#0e3a40" stroke-width="2.6"/>
-              <ellipse cx="64" cy="35" rx="25" ry="8.5" fill="#f7d9ad"/>
-              <ellipse cx="97" cy="30" rx="6" ry="4" fill="#a85c34" stroke="#0e3a40" stroke-width="2.2"/><ellipse cx="100" cy="42" rx="6" ry="4" fill="#a85c34" stroke="#0e3a40" stroke-width="2.2"/>
-              <circle cx="14" cy="20" r="4" fill="#cf8552" stroke="#0e3a40" stroke-width="2.2"/>
-              <circle cx="24" cy="31" r="15.5" fill="#cf8552" stroke="#0e3a40" stroke-width="2.6"/>
-              <ellipse cx="18" cy="34" rx="9" ry="7.5" fill="#f7d9ad"/>
-              <ellipse cx="13" cy="31" rx="3.2" ry="2.4" fill="#0e3a40"/>
-              <path d="M22 26q2.5-3 5 0M17 37q2 2 4 0" fill="none" stroke="#0e3a40" stroke-width="2" stroke-linecap="round"/>
-              <path d="M10 35l-7 1M10 37l-6 4" stroke="#0e3a40" stroke-width="1.2" stroke-linecap="round"/>
-              <path d="M6 58q13-6 26 0t26 0t26 0t26 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-            </g>
-            <g>
-              <path d="M96 42q12 2 16 12" fill="none" stroke="#0e3a40" stroke-width="10" stroke-linecap="round"/>
-              <path d="M96 42q12 2 16 12" fill="none" stroke="#b9683c" stroke-width="6" stroke-linecap="round"/>
-              <ellipse cx="62" cy="38" rx="38" ry="15" fill="#b9683c" stroke="#0e3a40" stroke-width="2.6"/>
-              <ellipse cx="64" cy="35" rx="25" ry="8.5" fill="#f2c891"/>
-              <ellipse cx="97" cy="30" rx="6" ry="4" fill="#97492a" stroke="#0e3a40" stroke-width="2.2"/><ellipse cx="100" cy="42" rx="6" ry="4" fill="#97492a" stroke="#0e3a40" stroke-width="2.2"/>
-              <circle cx="14" cy="20" r="4" fill="#b9683c" stroke="#0e3a40" stroke-width="2.2"/>
-              <circle cx="24" cy="31" r="15.5" fill="#b9683c" stroke="#0e3a40" stroke-width="2.6"/>
-              <ellipse cx="18" cy="34" rx="9" ry="7.5" fill="#f2c891"/>
-              <ellipse cx="13" cy="31" rx="3.2" ry="2.4" fill="#0e3a40"/>
-              <path d="M22 26q2.5-3 5 0M17 37q2 2 4 0" fill="none" stroke="#0e3a40" stroke-width="2" stroke-linecap="round"/>
-              <path d="M10 35l-7 1M10 37l-6 4" stroke="#0e3a40" stroke-width="1.2" stroke-linecap="round"/>
-              <g class="arm"><path d="M66 30q4-10 12-14" fill="none" stroke="#0e3a40" stroke-width="9" stroke-linecap="round"/><path d="M66 30q4-10 12-14" fill="none" stroke="#97492a" stroke-width="5" stroke-linecap="round"/></g>
-            </g>
-            <!-- joined paws -->
-            <path d="M50 40q2 12 14 20" fill="none" stroke="#0e3a40" stroke-width="9" stroke-linecap="round"/>
-            <path d="M50 40q2 12 14 20" fill="none" stroke="#97492a" stroke-width="5" stroke-linecap="round"/>
-            <circle cx="57" cy="52" r="5" fill="#a85c34" stroke="#0e3a40" stroke-width="2.2"/>
+      <div class="tally" role="img" aria-label="Score. You 0, seal 0.">
+        <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="15" fill="url(#leather)"/></svg>
+        <b data-side="you">0</b><i></i><b data-side="seal">0</b>
+        <svg viewBox="0 0 60 40" aria-hidden="true" focusable="false"><path d="M4 22C12 8 34 6 46 12c6 3 10 7 10 10-2 5-12 8-22 8-12 1-24-2-30-8Z" fill="#aeb6b4"/></svg>
+      </div>
+      <div class="kick" role="group" aria-label="Penalty kick. A seal guards the goal.">
+        <svg class="goal" viewBox="0 0 100 125" aria-hidden="true" focusable="false">
+          <path d="M22 14h56l6 20H16Z" fill="#0a2a33" fill-opacity=".22"/>
+          <g class="net" stroke="#d9e6df" stroke-width=".55" opacity=".7" stroke-linecap="round">
+            <path d="M22 14 16 34M30 14l-4 20M38 14l-2 13M46 14l-1 20M54 14l1 20M62 14l2 9M70 14l4 20M78 14l6 20M21 19h36M63 19h16M19 24h62M18 29h40M66 29h16"/>
+            <path d="M36 27q1 6-2 9M64 23q2 5 0 9M58 29q-2 4 1 8" fill="none"/>
+          </g>
+          <path d="M16 34 22 14h56l6 20" fill="none" stroke="#1d110a" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M16 34 22 14h56l6 20" fill="none" stroke="url(#rusty)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M19 26l1.5-5M40 14h7M66 14h4M81 24l1.5 5" stroke="#d98a45" stroke-width="1.2" stroke-linecap="round" opacity=".8"/>
+          <g fill="none" stroke="#3f7a52" stroke-width="1.1" stroke-linecap="round" opacity=".85"><path d="M28 14q2 5-1 9t1 7M49 14q-2 4 1 7M72 14q2 5-1 8t1 6M77 14q-1 3 1 5"/></g>
+        </svg>
+        <div class="seal">
+          <svg viewBox="-14 0 216 84" aria-hidden="true" focusable="false">
+            <g class="tailfin"><path d="M18 42Q2 30-12 22q4 12 12 20-8 8-10 22 14-8 28-22Z" fill="#59646a"/></g>
+            <path d="M12 43C30 18 92 9 142 19c26 5 44 14 49 23-5 10-30 18-60 20-42 4-92 0-119-19Z" fill="url(#sealskin)"/>
+            <path d="M40 30C70 18 120 15 160 24c-40-4-84-2-120 6Z" fill="#3f494f" opacity=".5"/>
+            <g fill="#39434a" opacity=".55"><ellipse cx="62" cy="30" rx="5" ry="3"/><ellipse cx="84" cy="24" rx="4" ry="2.5"/><ellipse cx="104" cy="29" rx="5" ry="3"/><ellipse cx="126" cy="24" rx="4" ry="2.4"/><ellipse cx="74" cy="38" rx="3" ry="2"/><ellipse cx="46" cy="38" rx="4" ry="2.4"/><ellipse cx="116" cy="38" rx="3" ry="2"/><ellipse cx="146" cy="30" rx="3" ry="2"/></g>
+            <g class="flipper"><path d="M112 54q2 20-22 28 6-14 4-30Z" fill="#59646a"/></g>
+            <ellipse cx="168" cy="33" rx="4.2" ry="4.6" fill="#0d1416"/><circle cx="169.3" cy="31.5" r="1.2" fill="#fff"/>
+            <path d="M188 40q3 1 3 3-2 2-5 1Z" fill="#1a2327"/>
+            <path d="M180 46l14 4M180 48l12 8M179 50l8 10" stroke="#eef1ec" stroke-width=".800" stroke-linecap="round" opacity=".9"/>
+            <path d="M176 49q6 3 12-1" fill="none" stroke="#3a454a" stroke-width="1" stroke-linecap="round"/>
           </svg>
         </div>
-        <div class="board" role="img" aria-label="Score. You 0, frog 0.">
-          <svg class="who" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="16" fill="#fff" stroke="#0e3a40" stroke-width="3"/><path d="M20 4a16 16 0 0 1 14.800 22Q26 21 20 20q3-8 0-16Z" fill="#ffd338"/><path d="M34.800 26A16 16 0 0 1 7 29q8-2 13-9 6 1 14.800 6Z" fill="#2f8fd6"/><path d="M20 4A16 16 0 0 0 7 29q8-2 13-9 3-8 0-16Z" fill="#f26a3d"/><circle cx="20" cy="20" r="16" fill="none" stroke="#0e3a40" stroke-width="3"/></svg>
-          <span class="card" data-side="you">0</span>
-          <span class="card" data-side="frog">0</span>
-          <svg class="who" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" fill="#63c852" stroke="#0e3a40" stroke-width="2.6"/><circle cx="29" cy="11" r="7" fill="#63c852" stroke="#0e3a40" stroke-width="2.6"/><ellipse cx="20" cy="24" rx="16" ry="12" fill="#63c852" stroke="#0e3a40" stroke-width="2.6"/><circle cx="11" cy="11" r="2.600" fill="#0e3a40"/><circle cx="29" cy="11" r="2.600" fill="#0e3a40"/><path d="M12 26q8 6 16 0" fill="none" stroke="#0e3a40" stroke-width="2.4" stroke-linecap="round"/></svg>
-        </div>
+        <button type="button" class="ball" aria-label="Old leather football. Drag it into the net. Or use the left and right arrow keys, then Space to kick.">
+          <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+            <circle cx="20" cy="20" r="18" fill="url(#leather)"/>
+            <g fill="none" stroke="#2c180b" stroke-width="1.1" opacity=".85"><path d="M8 7q9 6 9 13t-9 13M32 7q-9 6-9 13t9 13M17 20h6M3 15q8 3 14 2M3 25q8-3 14-2M37 15q-8 3-14 2M37 25q-8-3-14-2"/></g>
+            <g stroke="#e9d2ae" stroke-width="1" stroke-linecap="round"><path d="M18 17v6M20 16.5v7M22 17v6"/></g>
+            <path d="M26 8l3 1 1 3-2 3-3-1-1-3Z" fill="#1c0f07"/><path d="M26 8l-1.5-1.5M30 12l2-.500M28 15l.500 2M24 11l-2 .500" stroke="#c9a67a" stroke-width=".700" stroke-linecap="round"/>
+            <path d="M9 27l5 3M11 31l3 1M28 29l4-3" stroke="#d8b78c" stroke-width=".800" stroke-linecap="round" opacity=".7"/>
+            <ellipse cx="14" cy="12" rx="5" ry="3" fill="#fff" opacity=".16" transform="rotate(-30 14 12)"/>
+            <circle cx="20" cy="20" r="18" fill="none" stroke="#1c0f07" stroke-width="1.4"/>
+          </svg>
+        </button>
       </div>
-    <div class="kick" role="group" aria-label="Penalty kick with a beach volleyball. A frog keeps goal.">
-      <svg class="goal" viewBox="0 0 100 125" aria-hidden="true" focusable="false">
-        <path d="M22 14h56l6 20H16Z" fill="#fff" fill-opacity=".35"/>
-        <g class="net" stroke="#fff" stroke-width=".7" opacity=".9">
-          <path d="M22 14 16 34M30 14l-4 20M38 14l-2 20M46 14l-1 20M54 14l1 20M62 14l2 20M70 14l4 20M78 14l6 20M21 19h58M19 24h62M18 29h64"/>
-        </g>
-        <path d="M16 34 22 14h56l6 20" fill="none" stroke="#0e3a40" stroke-width="3.6" stroke-linejoin="round" stroke-linecap="round"/>
-        <path d="M16 34 22 14h56l6 20" fill="none" stroke="#e23b2e" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
-        <path d="M16 34 22 14h56l6 20" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="4 6"/>
-        <path class="tongue" d="M50 40L50 40" fill="none" stroke="#e0607f" stroke-width="2.6" stroke-linecap="round"/>
-        <circle class="tip" cx="50" cy="40" r="0" fill="#e0607f"/>
-      </svg>
-      <p class="frog-say" role="status" aria-live="polite"></p>
-      <div class="frog" data-mood="asleep">
-        <svg viewBox="0 0 120 104" aria-hidden="true" focusable="false">
-          <!-- the frog's lily pad -->
-          <path d="M60 81c32 0 57 5 57 11.5S92 104 60 104 3 99 3 92.5 28 81 60 81Z" fill="#74cc5c" stroke="#2f8f4e" stroke-width="2.6"/>
-          <path d="M60 92 8 90M60 92l-34 9M60 92l-4 11M60 92l36 8M60 92l52-4M60 92 30 84M60 92l32-8" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity=".45"/>
-          <path d="M60 92l22 11 16-4Z" fill="#2f8f4e" opacity=".55"/>
-          <ellipse cx="60" cy="93" rx="40" ry="5" fill="#0a3530" opacity=".2"/>
-          <g stroke="#0e3a40" stroke-width="3" stroke-linejoin="round">
-            <path d="M22 82q-15 1-13 12h31q3-9-6-13Z" fill="#63c852"/>
-            <path d="M98 82q15 1 13 12H80q-3-9 6-13Z" fill="#63c852"/>
-            <ellipse cx="23" cy="70" rx="16" ry="19" fill="#63c852"/>
-            <ellipse cx="97" cy="70" rx="16" ry="19" fill="#63c852"/>
-            <path d="M60 24c27 0 41 17 41 39S85 94 60 94 19 85 19 63s14-39 41-39Z" fill="#63c852"/>
-            <circle cx="40" cy="24" r="13.5" fill="#63c852"/>
-            <circle cx="80" cy="24" r="13.5" fill="#63c852"/>
-          </g>
-          <path d="M22 66c3 20 19 25 38 25s35-5 38-25c-7 13-20 17-38 17s-31-4-38-17Z" fill="#3fa544" opacity=".7"/>
-          <ellipse cx="60" cy="72" rx="21" ry="16" fill="#dcf29a"/>
-          <g stroke="#0e3a40" stroke-width="3" stroke-linejoin="round">
-            <path d="M42 86q-8 0-7 8h19q1-8-6-8Z" fill="#63c852"/>
-            <path d="M78 86q8 0 7 8H66q-1-8 6-8Z" fill="#63c852"/>
-          </g>
-          <g class="eyes-open">
-            <circle cx="40" cy="23" r="8.5" fill="#fff" stroke="#0e3a40" stroke-width="2.4"/><circle cx="80" cy="23" r="8.5" fill="#fff" stroke="#0e3a40" stroke-width="2.4"/>
-            <circle class="pupil" cx="41" cy="24.5" r="4.2" fill="#0e3a40"/><circle class="pupil" cx="79" cy="24.5" r="4.2" fill="#0e3a40"/>
-            <circle cx="39.5" cy="22.5" r="1.5" fill="#fff"/><circle cx="77.5" cy="22.5" r="1.5" fill="#fff"/>
-          </g>
-          <g class="eyes-shut" fill="none" stroke="#0e3a40" stroke-width="2.6" stroke-linecap="round">
-            <path d="M33 25q7 5 14 0M73 25q7 5 14 0"/>
-          </g>
-          <path class="mouth-smile" d="M36 50q24 17 48 0" fill="none" stroke="#0e3a40" stroke-width="3" stroke-linecap="round"/>
-          <path class="mouth-flat" d="M47 53q13 4 26 0" fill="none" stroke="#0e3a40" stroke-width="3" stroke-linecap="round"/>
-          <ellipse class="mouth-o" cx="60" cy="55" rx="6.5" ry="7.500" fill="#8a3345" stroke="#0e3a40" stroke-width="2.6"/>
-          <g class="zzz" fill="none" stroke="#0e3a40" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M96 20h7l-7 8h7"/><path d="M106 8h6l-6 7h6"/><path d="M113-2h5l-5 6h5"/>
-          </g>
-          <ellipse cx="30" cy="50" rx="5" ry="3" fill="#ff9db5" opacity=".65"/><ellipse cx="90" cy="50" rx="5" ry="3" fill="#ff9db5" opacity=".65"/>
-          <path d="M27 44q3-9 11-11M12 66q1-8 6-12" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" opacity=".75"/>
-          <circle cx="56" cy="40" r="1" fill="#0e3a40"/><circle cx="64" cy="40" r="1" fill="#0e3a40"/>
-        </svg>
-      </div>
-      <button type="button" class="ball" aria-label="Beach volleyball. Drag it into the net. Or use the left and right arrow keys, then Space to hit it.">
-        <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-          <circle cx="20" cy="20" r="18" fill="#fff"/>
-          <path d="M20 2a18 18 0 0 1 16.6 25Q27 21 20 20q3-9 0-18Z" fill="#ffd338"/>
-          <path d="M36.6 27A18 18 0 0 1 5 30q9-2 15-10 7 1 16.6 7Z" fill="#2f8fd6"/>
-          <path d="M20 2A18 18 0 0 0 5 30q9-2 15-10 3-9 0-18Z" fill="#f26a3d"/>
-          <path d="M20 20q3-9 0-18M20 20q7 1 16.6 7M20 20q-6 8-15 10M12 5q5 8 2 18M33 9q-8 2-12 6M12 35q5-6 16-6" fill="none" stroke="#0e3a40" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="20" cy="20" r="18" fill="none" stroke="#0e3a40" stroke-width="2.6"/>
-        </svg>
-      </button>
-    </div>
     </div>
   </section>
 
   <section id="contact" class="stop" aria-labelledby="h-contact">
-    <div class="sheet">
-      <button type="button" class="prop atom" aria-label="Atom">
-        <svg viewBox="0 0 90 90" width="90" height="90" aria-hidden="true" focusable="false">
-          <g fill="none" stroke="#0e3a40" stroke-width="2.6">
-            <ellipse cx="45" cy="45" rx="38" ry="14"/>
-            <ellipse cx="45" cy="45" rx="38" ry="14" transform="rotate(60 45 45)"/>
-            <ellipse cx="45" cy="45" rx="38" ry="14" transform="rotate(120 45 45)"/>
-          </g>
-          <circle cx="45" cy="45" r="6" fill="#f26a3d" stroke="#0e3a40" stroke-width="2.6"/>
-        </svg>
-      </button>
+    <div class="plate">
       <h2 id="h-contact" tabindex="-1">Contact</h2>
-      <div class="carry">
-        <svg viewBox="0 84 340 246" role="group" aria-label="An otter in glasses carrying three books: Email, LinkedIn and Medium. Each book is a link.">
-          <ellipse cx="124" cy="320" rx="96" ry="8" fill="#0a3530" opacity=".13"/>
-          <path d="M84 250Q52 300 6 304q-6 12 12 14 62 6 92-30Z" fill="#97492a"/>
-          <g class="otter-body">
-            <path d="M70 318q-2-14 16-14t20 14ZM132 318q-2-14 18-14t18 14Z" fill="#97492a"/>
-            <path d="M80 311v7M90 311v7M144 311v7M154 311v7" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M66 190q-10 104 16 122h72q26-18 16-122Q168 112 118 112T66 190Z" fill="#b9683c"/>
-            <path d="M68 262q0 40 14 50h72q14-10 14-50-18 18-50 18t-50-18Z" fill="#97492a" opacity=".55"/>
-            <path d="M94 200q-6 94 24 96 30-2 24-96-24-14-48 0Z" fill="#f2c891"/>
-            <circle cx="74" cy="106" r="13" fill="#b9683c"/><circle cx="162" cy="106" r="13" fill="#b9683c"/>
-            <circle cx="75" cy="107" r="6.5" fill="#97492a"/><circle cx="161" cy="107" r="6.5" fill="#97492a"/>
-            <ellipse cx="118" cy="140" rx="54" ry="44" fill="#b9683c"/>
-            <path d="M70 152q4-18 48-18t48 18q0 32-48 32t-48-32Z" fill="#f2c891"/>
-            <path d="M108 146q10-7 20 0 0 9-10 12-10-3-10-12Z" fill="#5a2a1a"/>
-            <path d="M118 158v5q-9 9-17 2M118 163q9 9 17 2" fill="none" stroke="#5a2a1a" stroke-width="2.8" stroke-linecap="round"/>
-            <path d="M94 162l-20-5M94 167l-20 3M95 172l-17 9M142 162l20-5M142 167l20 3M141 172l17 9" stroke="#97492a" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="97" cy="130" r="5.5" fill="#5a2a1a"/><circle cx="139" cy="128" r="5.5" fill="#5a2a1a"/>
-            <circle cx="95.5" cy="128" r="1.7" fill="#fff"/><circle cx="137.5" cy="126" r="1.7" fill="#fff"/>
-            <g class="specs" fill="rgba(255,255,255,.3)" stroke="#0e3a40" stroke-width="3.4">
-              <circle cx="97" cy="130" r="16"/><circle cx="139" cy="128" r="16"/><path d="M113 129h10M81 129l-14-5M155 126l13-6" fill="none"/>
-            </g>
-            <path class="sweat" d="M176 92q5 8 0 12t-5-4q0-4 5-8Z" fill="#bfe6ff" stroke="#0e3a40" stroke-width="2"/>
-          </g>
-          <g class="stack">
-          <a class="book b1" href="mailto:aakash14ash@gmail.com" aria-label="Email">
-            <g transform="rotate(-3 238.0 213)">
-              <rect x="168" y="196" width="140" height="34" rx="5" fill="#f26a3d" stroke="#0e3a40" stroke-width="3"/>
-              <path d="M294 200v26" stroke="#fffbe8" stroke-width="7" stroke-linecap="round"/>
-              <path d="M180 198v30" stroke="#0e3a40" stroke-width="2" opacity=".35"/>
-              <text x="192" y="219.5" fill="#fffbe8">Email</text>
-            </g>
-          </a>
-          <a class="book b2" href="https://www.linkedin.com/in/aakash-ashok-8714b6251" aria-label="LinkedIn">
-            <g transform="rotate(4 241.0 177)">
-              <rect x="176" y="160" width="130" height="34" rx="5" fill="#8fd8cf" stroke="#0e3a40" stroke-width="3"/>
-              <path d="M292 164v26" stroke="#fffbe8" stroke-width="7" stroke-linecap="round"/>
-              <path d="M188 162v30" stroke="#0e3a40" stroke-width="2" opacity=".35"/>
-              <text x="200" y="183.5" fill="#0e3a40">LinkedIn</text>
-            </g>
-          </a>
-          <a class="book b3" href="https://mazhaiyil.medium.com" aria-label="Medium">
-            <g transform="rotate(-5 231.0 141)">
-              <rect x="162" y="124" width="138" height="34" rx="5" fill="#ffd338" stroke="#0e3a40" stroke-width="3"/>
-              <path d="M286 128v26" stroke="#fffbe8" stroke-width="7" stroke-linecap="round"/>
-              <path d="M174 126v30" stroke="#0e3a40" stroke-width="2" opacity=".35"/>
-              <text x="186" y="147.5" fill="#0e3a40">Medium</text>
-            </g>
-          </a>
-          </g>
-          <g class="otter-arms">
-            <path d="M156 204q24 36 60 32" fill="none" stroke="#97492a" stroke-width="22" stroke-linecap="round"/>
-            <path d="M156 202q24 34 60 30" fill="none" stroke="#b9683c" stroke-width="17" stroke-linecap="round"/>
-            <path d="M210 226l8 3M209 232l8 2M207 238l8 1" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M82 214q50 48 114 28" fill="none" stroke="#97492a" stroke-width="22" stroke-linecap="round"/>
-            <path d="M82 212q50 46 114 26" fill="none" stroke="#b9683c" stroke-width="17" stroke-linecap="round"/>
-            <path d="M190 232l8 2M190 238l8 1M189 244l8-1" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
-          </g>
-        </svg>
-      </div>
+      <ul class="tags">
+        <li><a href="mailto:aakash14ash@gmail.com"><b>Email</b><span>aakash14ash@gmail.com</span></a></li>
+        <li><a href="https://www.linkedin.com/in/aakash-ashok-8714b6251"><b>LinkedIn</b><span>aakash-ashok-8714b6251</span></a></li>
+        <li><a href="https://mazhaiyil.medium.com"><b>Medium</b><span>mazhaiyil.medium.com</span></a></li>
+      </ul>
     </div>
   </section>
 </main>
